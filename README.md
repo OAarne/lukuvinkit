@@ -1,2 +1,2 @@
 # lukuvinkit
-tutun lukuvinkit
+lukuvinkit tutuksi
