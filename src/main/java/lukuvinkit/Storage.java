@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Storage {
     
-    private HashMap<Integer, Entry> readingTips;
+    private HashMap<Integer, ReadingTip> readingTips;
     int lastReadingTipId;
     
     public Storage() {
@@ -15,14 +15,16 @@ public class Storage {
     }
     
     public void addEntry(ReadingTip readingTip) {
+        //The first reading tip added will have an id of 0. This ticks up by one
+        //for each new tip added so that each id is unique.
         readingTips.put(lastReadingTipId + 1, readingTip);
     }
-    
-    public void removeEntryById(int id) {
+        
+    public void removeReadingTipById(int id) {
         readingTips.remove(id);
     }
     
-    public Entry getEntryById(int id) {
+    public ReadingTip getEntryById(int id) {
         return readingTips.get(id);
     }
 }
