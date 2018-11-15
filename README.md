@@ -1,4 +1,6 @@
 # lukuvinkit
+[![Build Status](https://travis-ci.org/OAarne/lukuvinkit.svg?branch=master)](https://travis-ci.org/OAarne/lukuvinkit)
+
 lukuvinkit tutuksi
 
 ## Valmiin määritelmä
