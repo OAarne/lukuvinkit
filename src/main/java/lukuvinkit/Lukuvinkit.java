@@ -23,16 +23,17 @@
  */
 package lukuvinkit;
 
-/**
- *
- * @author Tuupertunut
- */
+import java.io.IOException;
+
 public class Lukuvinkit {
 
     public static void main(String[] args) {
         Storage storage = new Storage();
-        CommandInterpreter interpreter = new CommandInterpreter(storage);
-        
-        interpreter.mainLoop();
+        try (CommandInterpreter interpreter = new CommandInterpreter(storage)) {
+            interpreter.mainLoop();
+        } catch (IOException e) {
+            System.err.println("Virhe poistuttaessa ohjelmasta.");
+            e.printStackTrace();
+        }
     }
 }
