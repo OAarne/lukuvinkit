@@ -37,7 +37,7 @@ public class CommandInterpreter implements AutoCloseable {
                 return;
             }
             ReadingTip tip = new ReadingTip(title, description, null, null, null);
-            interpreter.storage.addEntry(tip);
+            interpreter.storage.addReadingTip(tip);
         });
         
         private String commandString;
