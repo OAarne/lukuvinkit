@@ -3,13 +3,14 @@ package lukuvinkit;
 import java.util.function.BiConsumer;
 
 public enum Command {
+
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation);
-    
+
     private String commandString;
     private String helpText;
     private BiConsumer<CommandInterpreter, String[]> handler;
-    
+
     private Command(String command, String helpText, BiConsumer<CommandInterpreter, String[]> handler) {
         this.commandString = command;
         this.helpText = helpText;
@@ -29,7 +30,6 @@ public enum Command {
     }
 
     // Command methods
-
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
         System.out.println("Tuetut komennot:");
         for (Command cmd : Command.values()) {
@@ -42,16 +42,14 @@ public enum Command {
         if (args.length == 3) {
             title = args[1];
             description = args[2];
-        }
-        else if (args.length == 1) {
+        } else if (args.length == 1) {
             title = interpreter.prompt("Otsikko> ", "Nimetön vinkki");
             description = interpreter.prompt("Kuvaus> ", "");
-        }
-        else {
+        } else {
             System.err.println("Lisää-komennolle annettiin väärä määrä argumentteja!");
             return;
         }
         ReadingTip tip = new ReadingTip(title, description, null, null, null);
-        interpreter.getStorage().addEntry(tip);
+        interpreter.getStorage().addReadingTip(tip);
     }
 }

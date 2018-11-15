@@ -9,7 +9,7 @@ import java.util.Map;
 public class CommandInterpreter implements AutoCloseable {
 
     private static Map<String, Command> COMMANDS = new HashMap<>();
-    
+
     static {
         for (Command command : Command.values()) {
             COMMANDS.put(command.getCommandString(), command);
@@ -18,7 +18,7 @@ public class CommandInterpreter implements AutoCloseable {
 
     private Storage storage;
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    
+
     public CommandInterpreter(Storage storage) {
         this.storage = storage;
     }
@@ -30,12 +30,13 @@ public class CommandInterpreter implements AutoCloseable {
     public Storage getStorage() {
         return this.storage;
     }
-    
+
     /**
      * Kysyy käyttäjältä syötteen annetulla kehotteella.
-     * 
+     *
      * @param prompt kehote
-     * @param defaultValue Tämä arvo palautetaan, jos sisääntulovirta on suljettu.
+     * @param defaultValue Tämä arvo palautetaan, jos sisääntulovirta on
+     * suljettu.
      * @return Käyttäjän syötteen.
      */
     public String prompt(String prompt, String defaultValue) {
