@@ -51,7 +51,7 @@ public class CommandInterpreter implements AutoCloseable {
     }
 
     public void mainLoop() {
-        System.out.println(COMMANDS.values().size());
+        System.out.println("Lukuvinkit-ohjelma. Kirjoita \"ohje\" saadaksesi listauksen komennoista.");
         while (true) {
             String command = prompt("> ", "lopeta");
             if (command.equals("lopeta") || command.equals("poistu")) {
