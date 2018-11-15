@@ -1,12 +1,13 @@
 package lukuvinkit;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandInterpreter implements AutoCloseable {
+
     private static Map<String, Command> COMMANDS = new HashMap<>();
     
     static {
@@ -21,7 +22,7 @@ public class CommandInterpreter implements AutoCloseable {
     public CommandInterpreter(Storage storage) {
         this.storage = storage;
     }
-    
+
     public void close() throws IOException {
         this.reader.close();
     }
@@ -48,7 +49,7 @@ public class CommandInterpreter implements AutoCloseable {
             return defaultValue;
         }
     }
-    
+
     public void mainLoop() {
         System.out.println(COMMANDS.values().size());
         while (true) {
@@ -60,8 +61,7 @@ public class CommandInterpreter implements AutoCloseable {
                 Command cmdObj = COMMANDS.get(args[0]);
                 if (cmdObj != null) {
                     cmdObj.getHandler().accept(this, args);
-                }
-                else {
+                } else {
                     System.err.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
                 }
             }
