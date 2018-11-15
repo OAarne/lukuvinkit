@@ -2,13 +2,13 @@ package lukuvinkit;
 
 public class Storage {
     
-    public void addEntry(Entry entry) {
+    public void addEntry(ReadingTip entry) {
     }
     
     public void removeEntryById(int id) {
     }
     
-    public Entry getEntryById(int id) {
+    public ReadingTip getEntryById(int id) {
         return null;
     }
 }
