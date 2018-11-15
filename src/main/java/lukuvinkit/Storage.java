@@ -24,7 +24,7 @@ public class Storage {
         readingTips.remove(id);
     }
     
-    public ReadingTip getEntryById(int id) {
+    public ReadingTip getReadingTipById(int id) {
         return readingTips.get(id);
     }
 }
