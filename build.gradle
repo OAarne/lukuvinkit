@@ -15,3 +15,7 @@ jar {
         attributes 'Main-Class': mainClassName
     }
 }
+
+run {
+    standardInput = System.in
+}

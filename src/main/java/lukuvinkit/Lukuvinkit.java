@@ -23,6 +23,8 @@
  */
 package lukuvinkit;
 
+import java.util.Scanner;
+
 /**
  *
  * @author Tuupertunut
@@ -30,6 +32,20 @@ package lukuvinkit;
 public class Lukuvinkit {
 
     public static void main(String[] args) {
-        System.out.println("hello lukuvinkit");
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("lopeta - Lopettaa ohjelman");
+
+        while (true) {
+            System.out.println("Syötä komento");
+            String command = scan.nextLine();
+
+            /* tähän iffiin muut komennot */
+            if (command.equals("lopeta")) {
+                break;
+            } else {
+                System.out.println("Tunnistamaton komento");
+            }
+        }
     }
 }
