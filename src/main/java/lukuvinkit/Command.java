@@ -29,7 +29,8 @@ public enum Command {
         return this.handler;
     }
 
-    // Command methods
+    // Command implementations
+    
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
         System.out.println("Tuetut komennot:");
         for (Command cmd : Command.values()) {

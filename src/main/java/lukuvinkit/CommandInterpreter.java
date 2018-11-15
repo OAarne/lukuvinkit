@@ -32,12 +32,11 @@ public class CommandInterpreter implements AutoCloseable {
     }
 
     /**
-     * Kysyy käyttäjältä syötteen annetulla kehotteella.
+     * Query an input from the user using a prompt
      *
-     * @param prompt kehote
-     * @param defaultValue Tämä arvo palautetaan, jos sisääntulovirta on
-     * suljettu.
-     * @return Käyttäjän syötteen.
+     * @param prompt the prompt shown to the user
+     * @param defaultValue This value is returned if the input stream is closed.
+     * @return The inputted text.
      */
     public String prompt(String prompt, String defaultValue) {
         System.out.print(prompt);
