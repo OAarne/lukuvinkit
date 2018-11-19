@@ -16,16 +16,16 @@ public class Stepdefs {
 //    @Given("^application is running$")
 //    public void application_is_running() throws Throwable { }
 
-    @Kun("komento {string} syötetään")
+    @Kun("^komento \"([^\"]*)\" syötetään$")
     public void commandIsEntered(String command) {
         inputLines.add(command);
     }
-
 
     @Niin("ohjelma sulkeutuu")
     public void applicationIsClosed() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         io = new StubIO(inputLines);
         app = new CommandInterpreter(storage, io);
+        app.mainLoop();
     }
 }
