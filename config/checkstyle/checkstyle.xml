@@ -6,7 +6,7 @@
         <module name="LeftCurly"/>
         <module name="RightCurly"/>
         <module name="EmptyLineSeparator">
-            <property name="tokens" value="VARIABLE_DEF, METHOD_DEF"/>
+            <property name="tokens" value="METHOD_DEF"/>
         </module>
         <module name="Indentation">
             <property name="forceStrictCondition" value="true"/>
