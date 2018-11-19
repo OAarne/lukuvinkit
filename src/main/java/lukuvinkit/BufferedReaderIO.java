@@ -13,13 +13,18 @@ public class BufferedReaderIO implements IO {
     }
 
     @Override
-    public void print(String toPrint) {
-        System.out.print(toPrint);
+    public void print(Object obj) {
+        System.out.print(obj);
     }
 
     @Override
-    public void printLn(String printLine) {
-        System.out.println(printLine);
+    public void println(Object obj) {
+        System.out.println(obj);
+    }
+
+    @Override
+    public void println() {
+        System.out.println();
     }
 
     @Override
