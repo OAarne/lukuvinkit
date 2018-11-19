@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Storage {
 
@@ -26,8 +27,8 @@ public class Storage {
         readingTips.remove(id);
     }
 
-    public ReadingTip getReadingTipById(int id) {
-        return readingTips.get(id);
+    public Optional<ReadingTip> getReadingTipById(int id) {
+        return Optional.ofNullable(readingTips.get(id));
     }
 
     public List<Map.Entry<Integer, ReadingTip>> getReadingTips() {
