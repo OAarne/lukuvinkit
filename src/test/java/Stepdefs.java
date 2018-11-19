@@ -1,5 +1,5 @@
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import cucumber.api.java.fi.Kun;
+import cucumber.api.java.fi.Niin;
 import lukuvinkit.CommandInterpreter;
 import lukuvinkit.Storage;
 import lukuvinkit.StubIO;
@@ -16,13 +16,13 @@ public class Stepdefs {
 //    @Given("^application is running$")
 //    public void application_is_running() throws Throwable { }
 
-    @When("^komento \"([^\"]*)\" syötetään$")
+    @Kun("^komento {string} syötetään$")
     public void commandIsEntered(String command) {
         inputLines.add(command);
     }
 
 
-    @Then("^ohjelma sulkeutuu$")
+    @Niin("^ohjelma sulkeutuu$")
     public void applicationIsClosed() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         io = new StubIO(inputLines);
