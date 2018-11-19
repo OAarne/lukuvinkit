@@ -12,11 +12,11 @@ public class Storage {
         this.lastReadingTipId = -1;
     }
 
-    public void addReadingTip(ReadingTip readingTip) {
+    public int addReadingTip(ReadingTip readingTip) {
         //The first reading tip added will have an id of 0. This ticks up by one
         //for each new tip added so that each id is unique.
         readingTips.put(lastReadingTipId + 1, readingTip);
-        lastReadingTipId++;
+        return lastReadingTipId++;
     }
 
     public void removeReadingTipById(int id) {
