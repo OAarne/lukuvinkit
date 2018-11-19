@@ -23,8 +23,6 @@
  */
 package lukuvinkit;
 
-import java.io.IOException;
-
 public class Lukuvinkit {
 
     public static void main(String[] args) {
