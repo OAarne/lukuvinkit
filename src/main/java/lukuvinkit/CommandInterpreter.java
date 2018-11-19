@@ -1,12 +1,10 @@
 package lukuvinkit;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandInterpreter implements AutoCloseable {
+public class CommandInterpreter {
 
     private static Map<String, Command> COMMANDS = new HashMap<>();
 
@@ -17,18 +15,19 @@ public class CommandInterpreter implements AutoCloseable {
     }
 
     private Storage storage;
-    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private IO io;
 
-    public CommandInterpreter(Storage storage) {
+    public CommandInterpreter(Storage storage, IO io) {
         this.storage = storage;
-    }
-
-    public void close() throws IOException {
-        this.reader.close();
+        this.io = io;
     }
 
     public Storage getStorage() {
         return this.storage;
+    }
+
+    public IO getIO() {
+        return this.io;
     }
 
     /**
@@ -42,16 +41,16 @@ public class CommandInterpreter implements AutoCloseable {
         System.out.print(prompt);
         System.out.flush();
         try {
-            String input = reader.readLine();
+            String input = io.readLine();
             return input == null ? defaultValue : input;
         } catch (IOException e) {
-            System.err.println("Virhe syötteen luvussa!");
+            io.println("Virhe syötteen luvussa!");
             return defaultValue;
         }
     }
 
     public void mainLoop() {
-        System.out.println("Lukuvinkit-ohjelma. Kirjoita \"ohje\" saadaksesi listauksen komennoista.");
+        io.println("Lukuvinkit-ohjelma. Kirjoita \"ohje\" saadaksesi listauksen komennoista.");
         while (true) {
             String command = prompt("> ", "lopeta");
             if (command.equals("lopeta") || command.equals("poistu")) {
@@ -62,7 +61,7 @@ public class CommandInterpreter implements AutoCloseable {
                 if (cmdObj != null) {
                     cmdObj.getHandler().accept(this, args);
                 } else {
-                    System.err.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
+                    io.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
                 }
             }
         }

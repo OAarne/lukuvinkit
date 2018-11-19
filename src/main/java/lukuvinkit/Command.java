@@ -34,16 +34,16 @@ public enum Command {
     // Command implementations
 
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
-        System.out.println("Tuetut komennot:");
+        interpreter.getIO().println("Tuetut komennot:");
         for (Command cmd : Command.values()) {
-            System.out.println(cmd.commandString + " - " + cmd.helpText);
+            interpreter.getIO().println(cmd.commandString + " - " + cmd.helpText);
         }
     }
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
         ReadingTipField[] fields = ReadingTipField.values();
         ReadingTip tip = new ReadingTip();
-        if (args.length == 3) {
+        if (args.length == 1 + fields.length) {
             int i = 1;
             for (ReadingTipField field : fields) {
                 tip.setFieldValue(field, args[i++]);
@@ -53,21 +53,21 @@ public enum Command {
                 tip.setFieldValue(field, interpreter.prompt(field.getName() + "> ", ""));
             }
         } else {
-            System.out.println("Lisää-komennolle annettiin väärä määrä argumentteja!");
+            interpreter.getIO().println("Lisää-komennolle annettiin väärä määrä argumentteja!");
             return;
         }
         int id = interpreter.getStorage().addReadingTip(tip);
-        System.out.println("Lisättiin vinkki tunnisteella " + id + ".");
+        interpreter.getIO().println("Lisättiin vinkki tunnisteella " + id + ".");
     }
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
         interpreter.getStorage().getReadingTips().forEach(entry -> {
-            System.out.print(entry.getKey());
+            interpreter.getIO().print(entry.getKey());
             ReadingTip tip = entry.getValue();
             for (ReadingTipField field : ReadingTipField.values()) {
-                System.out.print(" | " + tip.getFieldValue(field));
+                interpreter.getIO().print(" | " + tip.getFieldValue(field));
             }
-            System.out.println();
+            interpreter.getIO().println();
         });
     }
 
@@ -79,15 +79,15 @@ public enum Command {
             } else if (args.length == 2) {
                 id = Integer.parseInt(args[1]);
             } else {
-                System.out.println("Poista-komennolle annettiin väärä määrä argumentteja!");
+                interpreter.getIO().println("Poista-komennolle annettiin väärä määrä argumentteja!");
                 return;
             }
         } catch (NumberFormatException e) {
-            System.out.println("Annettu tunniste on virheellinen.");
+            interpreter.getIO().println("Annettu tunniste on virheellinen.");
             return;
         }
         if (!interpreter.getStorage().getReadingTipById(id).isPresent()) {
-            System.out.println("Annetulla tunnisteella ei ole lukuvinkkiä.");
+            interpreter.getIO().println("Annetulla tunnisteella ei ole lukuvinkkiä.");
             return;
         }
         interpreter.getStorage().removeReadingTipById(id);

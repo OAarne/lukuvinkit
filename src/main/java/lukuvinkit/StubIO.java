@@ -1,4 +1,5 @@
 package lukuvinkit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,7 +7,7 @@ public class StubIO implements IO {
 
     private List<String> inputs;
     private int i;
-    private ArrayList<String> outputs;
+    private List<String> outputs;
 
     public StubIO(List<String> inputs) {
         this.inputs = inputs;
@@ -15,14 +16,17 @@ public class StubIO implements IO {
     }
 
     @Override
-    public void print(String toPrint) {
-        outputs.add(toPrint);
+    public void print(Object obj) {
+        outputs.add(obj.toString());
     }
 
+    @Override
+    public void println(Object obj) {
+        outputs.add(obj.toString());
+    }
 
     @Override
-    public void printLn(String printLine) {
-        outputs.add(printLine);
+    public void println() {
     }
 
     @Override

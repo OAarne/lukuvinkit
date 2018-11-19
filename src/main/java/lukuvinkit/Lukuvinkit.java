@@ -23,15 +23,14 @@
  */
 package lukuvinkit;
 
-import java.io.IOException;
-
 public class Lukuvinkit {
 
     public static void main(String[] args) {
         Storage storage = new Storage();
-        try (CommandInterpreter interpreter = new CommandInterpreter(storage)) {
+        try (IO io = new BufferedReaderIO()) {
+            CommandInterpreter interpreter = new CommandInterpreter(storage, io);
             interpreter.mainLoop();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Virhe poistuttaessa ohjelmasta.");
             e.printStackTrace();
         }
