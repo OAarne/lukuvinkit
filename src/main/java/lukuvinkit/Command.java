@@ -51,6 +51,7 @@ public enum Command {
             return;
         }
         ReadingTip tip = new ReadingTip(title, description, null, null, null);
-        interpreter.getStorage().addReadingTip(tip);
+        int id = interpreter.getStorage().addReadingTip(tip);
+        System.out.println("Lisättiin vinkki tunnisteella " + id + ".");
     }
 }
