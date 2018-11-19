@@ -62,7 +62,7 @@ public enum Command {
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
         interpreter.getStorage().getReadingTips().forEach(entry -> {
-            interpreter.getIO().print(entry.getKey().toString());
+            interpreter.getIO().print(entry.getKey());
             ReadingTip tip = entry.getValue();
             for (ReadingTipField field : ReadingTipField.values()) {
                 interpreter.getIO().print(" | " + tip.getFieldValue(field));
