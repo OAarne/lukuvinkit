@@ -11,22 +11,26 @@ public class StubIO implements IO {
 
     public StubIO(List<String> inputs) {
         this.inputs = inputs;
-        outputs = new ArrayList<>();
         i = 0;
+        outputs = new ArrayList<>();
+        outputs.add("");
     }
 
     @Override
     public void print(Object obj) {
-        outputs.add(obj.toString());
-    }
-
-    @Override
-    public void println(Object obj) {
-        outputs.add(obj.toString());
+        int lastIndex = outputs.size() - 1;
+        outputs.set(lastIndex, outputs.get(lastIndex) + obj.toString());
     }
 
     @Override
     public void println() {
+        outputs.add("");
+    }
+
+    @Override
+    public void println(Object obj) {
+        print(obj);
+        println();
     }
 
     @Override
