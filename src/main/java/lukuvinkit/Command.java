@@ -5,7 +5,8 @@ import java.util.function.BiConsumer;
 public enum Command {
 
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
-    CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation);
+    CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
+    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation);
 
     private String commandString;
     private String helpText;
@@ -39,19 +40,33 @@ public enum Command {
     }
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
-        String title, description;
+        ReadingTipField[] fields = ReadingTipField.values();
+        ReadingTip tip = new ReadingTip();
         if (args.length == 3) {
-            title = args[1];
-            description = args[2];
+            int i = 1;
+            for (ReadingTipField field : fields) {
+                tip.setFieldValue(field, args[i++]);
+            }
         } else if (args.length == 1) {
-            title = interpreter.prompt("Otsikko> ", "Nimetön vinkki");
-            description = interpreter.prompt("Kuvaus> ", "");
+            for (ReadingTipField field : fields) {
+                tip.setFieldValue(field, interpreter.prompt(field.getName() + "> ", ""));
+            }
         } else {
             System.err.println("Lisää-komennolle annettiin väärä määrä argumentteja!");
             return;
         }
-        ReadingTip tip = new ReadingTip(title, description, null, null, null);
         int id = interpreter.getStorage().addReadingTip(tip);
         System.out.println("Lisättiin vinkki tunnisteella " + id + ".");
+    }
+
+    public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
+        interpreter.getStorage().getReadingTips().forEach(entry -> {
+            System.out.print(entry.getKey());
+            ReadingTip tip = entry.getValue();
+            for (ReadingTipField field : ReadingTipField.values()) {
+                System.out.print(" | " + tip.getFieldValue(field));
+            }
+            System.out.println();
+        });
     }
 }
