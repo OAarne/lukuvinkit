@@ -7,7 +7,7 @@ public class StubIO implements IO {
 
     private List<String> inputs;
     private int i;
-    private ArrayList<String> outputs;
+    private List<String> outputs;
 
     public StubIO(List<String> inputs) {
         this.inputs = inputs;
