@@ -1,6 +1,6 @@
 package lukuvinkit;
 
-public interface IO {
+public interface IO extends AutoCloseable {
     void print(String toPrint);
     void printLn(String printLine);
     String readLine();
