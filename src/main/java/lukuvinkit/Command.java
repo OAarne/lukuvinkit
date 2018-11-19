@@ -6,6 +6,7 @@ public enum Command {
 
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
+    REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation);
 
     private String commandString;
@@ -31,7 +32,7 @@ public enum Command {
     }
 
     // Command implementations
-    
+
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
         System.out.println("Tuetut komennot:");
         for (Command cmd : Command.values()) {
@@ -52,7 +53,7 @@ public enum Command {
                 tip.setFieldValue(field, interpreter.prompt(field.getName() + "> ", ""));
             }
         } else {
-            System.err.println("Lisää-komennolle annettiin väärä määrä argumentteja!");
+            System.out.println("Lisää-komennolle annettiin väärä määrä argumentteja!");
             return;
         }
         int id = interpreter.getStorage().addReadingTip(tip);
@@ -68,5 +69,27 @@ public enum Command {
             }
             System.out.println();
         });
+    }
+
+    public static void removeReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+        int id;
+        try {
+            if (args.length == 1) {
+                id = Integer.parseInt(interpreter.prompt("Tunniste> ", ""));
+            } else if (args.length == 2) {
+                id = Integer.parseInt(args[1]);
+            } else {
+                System.out.println("Poista-komennolle annettiin väärä määrä argumentteja!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Annettu tunniste on virheellinen.");
+            return;
+        }
+        if (!interpreter.getStorage().getReadingTipById(id).isPresent()) {
+            System.out.println("Annetulla tunnisteella ei ole lukuvinkkiä.");
+            return;
+        }
+        interpreter.getStorage().removeReadingTipById(id);
     }
 }
