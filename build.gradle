@@ -7,6 +7,13 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    testCompile 'io.cucumber:cucumber-java:4.2.0'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
 }
 
 mainClassName = 'lukuvinkit.Lukuvinkit'
@@ -18,4 +25,15 @@ jar {
 
 run {
     standardInput = System.in
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+        }
+    }
 }
