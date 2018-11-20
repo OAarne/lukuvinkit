@@ -9,6 +9,10 @@ public class StubIO implements IO {
     private int i;
     private List<String> outputs;
 
+    public List<String> getOutputs() {
+        return outputs;
+    }
+
     public StubIO(List<String> inputs) {
         this.inputs = inputs;
         i = 0;
