@@ -1,5 +1,3 @@
-import cucumber.api.PendingException;
-import cucumber.api.java.fi.Ja;
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
 import cucumber.api.java.fi.Oletetaan;

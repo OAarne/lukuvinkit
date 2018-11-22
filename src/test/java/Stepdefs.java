@@ -13,7 +13,7 @@ public class Stepdefs {
     CommandInterpreter app;
     StubIO io;
     Storage storage = new Storage();
-    List<String> inputLines = new ArrayList();
+    List<String> inputLines = new ArrayList<>();
 
 //    @Given("^application is running$")
 //    public void application_is_running() throws Throwable { }
