@@ -8,6 +8,7 @@ public enum Command {
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
     CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
+    MARK_READED("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadedImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
     PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
@@ -76,6 +77,11 @@ public enum Command {
     }
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
+        interpreter.getIO().print("Tunniste");
+        for (ReadingTipField field : ReadingTipField.values()) {
+            interpreter.getIO().print(" | " + field.getName());
+        }
+        interpreter.getIO().println();
         interpreter.getStorage().getReadingTips().forEach(entry -> {
             interpreter.getIO().print(entry.getKey());
             ReadingTip tip = entry.getValue();
@@ -86,26 +92,75 @@ public enum Command {
         });
     }
 
-    public static void removeReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+    public static void markReadedImplementation(CommandInterpreter interpreter, String[] args) {
         int id;
-        try {
-            if (args.length == 1) {
-                id = Integer.parseInt(interpreter.prompt("Tunniste> ", ""));
-            } else if (args.length == 2) {
+        if (args.length == 1) {
+            id = promptId(interpreter);
+        } else if (args.length == 2) {
+            try {
                 id = Integer.parseInt(args[1]);
-            } else {
-                interpreter.getIO().println("Poista-komennolle annettiin väärä määrä argumentteja!");
+            } catch (NumberFormatException e) {
+                interpreter.getIO().println("Annettu tunniste on virheellinen.");
                 return;
             }
-        } catch (NumberFormatException e) {
-            interpreter.getIO().println("Annettu tunniste on virheellinen.");
+        } else {
+            interpreter.getIO().println("Poista-komennolle annettiin väärä määrä argumentteja!");
             return;
         }
-        if (!interpreter.getStorage().getReadingTipById(id).isPresent()) {
-            interpreter.getIO().println("Annetulla tunnisteella ei ole lukuvinkkiä.");
+        if (!validateId(interpreter, id)) {
+            return;
+        }
+        interpreter.getStorage().getReadingTipById(id).get().setFieldValue(ReadingTipField.IS_READ, Boolean.TRUE);
+    }
+
+    public static void removeReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+        int id;
+        if (args.length == 1) {
+            id = promptId(interpreter);
+        } else if (args.length == 2) {
+            try {
+                id = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                interpreter.getIO().println("Annettu tunniste on virheellinen.");
+                return;
+            }
+        } else {
+            interpreter.getIO().println("Poista-komennolle annettiin väärä määrä argumentteja!");
+            return;
+        }
+        if (!validateId(interpreter, id)) {
             return;
         }
         interpreter.getStorage().removeReadingTipById(id);
+    }
+
+    private static int promptId(CommandInterpreter interpreter) {
+        int id = -1;
+        do {
+            try {
+                id = Integer.parseInt(interpreter.prompt("Tunniste> ", ""));
+            } catch (NumberFormatException e) {
+                interpreter.getIO().println("Annettu tunniste on virheellinen.");
+                continue;
+            }
+            if (!validateId(interpreter, id)) {
+                continue;
+            }
+        } while (false);
+        return id;
+    }
+
+    private static boolean validateId(CommandInterpreter interpreter, int id) {
+        if (!interpreter.getStorage().getReadingTipById(id).isPresent()) {
+            interpreter.getIO().println("Annetulla tunnisteella ei ole lukuvinkkiä.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static void printJSONImplementation(CommandInterpreter interpreter, String[] args) {
+        interpreter.getIO().println(interpreter.getStorage().toJSON());
     }
 
     public String getCommandString() {
@@ -118,9 +173,5 @@ public enum Command {
 
     public BiConsumer<CommandInterpreter, String[]> getHandler() {
         return this.handler;
-    }
-
-    public static void printJSONImplementation(CommandInterpreter interpreter, String[] args) {
-        interpreter.getIO().println(interpreter.getStorage().toJSON());
     }
 }
