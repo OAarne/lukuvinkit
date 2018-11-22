@@ -45,6 +45,6 @@ public class Stepdefs {
         app = new CommandInterpreter(storage, io);
         app.mainLoop();
         List<String> output = io.getOutputs();
-        assertTrue(!output.get(output.size()-2).contains("|"));
+        assertTrue(output.get(output.size()-2).contains("Tunniste | Otsikko | "));
     }
 }
