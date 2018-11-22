@@ -1,15 +1,18 @@
 package lukuvinkit;
 
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 public enum Command {
 
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
+    CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation);
 
     private String commandString;
+
     private String helpText;
     private BiConsumer<CommandInterpreter, String[]> handler;
 
@@ -19,20 +22,7 @@ public enum Command {
         this.handler = handler;
     }
 
-    public String getCommandString() {
-        return this.commandString;
-    }
-
-    public String getHelpText() {
-        return this.helpText;
-    }
-
-    public BiConsumer<CommandInterpreter, String[]> getHandler() {
-        return this.handler;
-    }
-
     // Command implementations
-
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
         interpreter.getIO().println("Tuetut komennot:");
         for (Command cmd : Command.values()) {
@@ -42,6 +32,17 @@ public enum Command {
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
         ReadingTipField[] fields = ReadingTipField.values();
+        addReadingTipWithGivenFields(interpreter, args, fields);
+    }
+
+    private static void addBookImplementation(CommandInterpreter interpreter, String[] args) {
+        ReadingTipField[] fields = (ReadingTipField[]) Arrays.stream(ReadingTipField.values()).filter(field ->
+            field.getAssociatedTipTypes().contains(TipType.BOOK)
+        ).toArray();
+        addReadingTipWithGivenFields(interpreter, args, fields);
+    }
+
+    private static void addReadingTipWithGivenFields(CommandInterpreter interpreter, String[] args, ReadingTipField[] fields) {
         ReadingTip tip = new ReadingTip();
         if (args.length == 1 + fields.length) {
             int i = 1;
@@ -104,5 +105,17 @@ public enum Command {
             return;
         }
         interpreter.getStorage().removeReadingTipById(id);
+    }
+
+    public String getCommandString() {
+        return this.commandString;
+    }
+
+    public String getHelpText() {
+        return this.helpText;
+    }
+
+    public BiConsumer<CommandInterpreter, String[]> getHandler() {
+        return this.handler;
     }
 }
