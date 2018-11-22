@@ -9,7 +9,7 @@ public enum Command {
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
     CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
     CREATE_ARTICLE("artikkeli", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
-    MARK_READED("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadedImplementation),
+    MARK_READ("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
     PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
@@ -99,7 +99,7 @@ public enum Command {
         });
     }
 
-    public static void markReadedImplementation(CommandInterpreter interpreter, String[] args) {
+    public static void markReadImplementation(CommandInterpreter interpreter, String[] args) {
         int id;
         if (args.length == 1) {
             id = promptId(interpreter);
