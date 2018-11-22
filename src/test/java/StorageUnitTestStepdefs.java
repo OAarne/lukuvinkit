@@ -23,7 +23,7 @@ public class StorageUnitTestStepdefs {
     @Kun("varastoon on lisätty vinkki otsikolla {string}")
     public void varastoon_on_lisätty_vinkki_otsikolla(String title) {
         ReadingTip tip = new ReadingTip();
-        tip.setFieldValue(TITLE, title);
+        tip.setFieldValueString(TITLE, title);
         previousId = storage.addReadingTip(tip);
     }
 
@@ -36,7 +36,7 @@ public class StorageUnitTestStepdefs {
     public void varaston_palauttamalla_tunnisteella_haetun_vinkin_otsikko_on(String title) {
         Optional<ReadingTip> tip = storage.getReadingTipById(previousId);
         assertTrue(tip.isPresent());
-        assertEquals(tip.get().getFieldValue(TITLE), title);
+        assertEquals(tip.get().getFieldValueString(TITLE), title);
     }
 
     @Niin("^varaston palauttamalla tunnisteella ei löydy vinkkiä$")
