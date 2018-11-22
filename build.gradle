@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'checkstyle'
-
+apply plugin: 'jacoco'
 
 
 repositories {
@@ -12,12 +12,7 @@ dependencies {
     compile 'org.json:json:20180813'
     testCompile 'junit:junit:4.12'
     testCompile 'io.cucumber:cucumber-java:4.2.0'
-}
-
-configurations {
-    cucumberRuntime {
-        extendsFrom testRuntime
-    }
+    testCompile 'io.cucumber:cucumber-junit:4.2.0'
 }
 
 mainClassName = 'lukuvinkit.Lukuvinkit'
@@ -31,13 +26,7 @@ run {
     standardInput = System.in
 }
 
-task cucumber() {
-    dependsOn assemble, compileTestJava
-    doLast {
-        javaexec {
-            main = "cucumber.api.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', '', 'src/test/resources']
-        }
-    }
+/* Tällä saadaan gradle test näyttämään cucumberin tulostamat ilmoitukset. */
+test {
+    testLogging.showStandardStreams = true
 }
