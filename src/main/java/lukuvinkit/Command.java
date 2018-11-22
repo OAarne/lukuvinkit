@@ -8,6 +8,7 @@ public enum Command {
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
     CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
+    CREATE_ARTICLE("artikkeli", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
     PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
@@ -33,18 +34,24 @@ public enum Command {
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
         ReadingTipField[] fields = ReadingTipField.values();
-        addReadingTipWithGivenFields(interpreter, args, fields);
+        addReadingTipOfGivenType(interpreter, args, TipType.OTHER);
     }
 
     private static void addBookImplementation(CommandInterpreter interpreter, String[] args) {
-        ReadingTipField[] fields = (ReadingTipField[]) Arrays.stream(ReadingTipField.values()).filter(field ->
-            field.getAssociatedTipTypes().contains(TipType.BOOK)
-        ).toArray();
-        addReadingTipWithGivenFields(interpreter, args, fields);
+        addReadingTipOfGivenType(interpreter, args, TipType.BOOK);
     }
 
-    private static void addReadingTipWithGivenFields(CommandInterpreter interpreter, String[] args, ReadingTipField[] fields) {
+    private static void addArticleImplementation(CommandInterpreter interpreter, String[] args) {
+        addReadingTipOfGivenType(interpreter, args, TipType.ARTICLE);
+    }
+
+    private static void addReadingTipOfGivenType(CommandInterpreter interpreter, String[] args, TipType tipType) {
+        ReadingTipField[] fields = Arrays.stream(ReadingTipField.values()).filter(field ->
+            field.getAssociatedTipTypes().contains(tipType)
+        ).toArray(ReadingTipField[]::new);
         ReadingTip tip = new ReadingTip();
+        tip.setFieldValueString(ReadingTipField.TYPE, tipType.toString());
+
         if (args.length == 1 + fields.length) {
             int i = 1;
             for (ReadingTipField field : fields) {
