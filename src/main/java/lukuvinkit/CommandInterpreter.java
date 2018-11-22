@@ -38,8 +38,8 @@ public class CommandInterpreter {
      * @return The inputted text.
      */
     public String prompt(String prompt, String defaultValue) {
-        System.out.print(prompt);
-        System.out.flush();
+        io.print(prompt);
+        io.flush();
         try {
             String input = io.readLine();
             return input == null ? defaultValue : input;
