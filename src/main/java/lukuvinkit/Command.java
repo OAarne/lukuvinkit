@@ -46,11 +46,24 @@ public enum Command {
         if (args.length == 1 + fields.length) {
             int i = 1;
             for (ReadingTipField field : fields) {
-                tip.setFieldValue(field, args[i++]);
+                if (!field.getType().validateString(args[i])) {
+                    interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
+                    return;
+                }
+                tip.setFieldValueString(field, args[i]);
+                i++;
             }
         } else if (args.length == 1) {
             for (ReadingTipField field : fields) {
-                tip.setFieldValue(field, interpreter.prompt(field.getName() + "> ", ""));
+                String value = null;
+                do {
+                    if (value != null) {
+                        interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
+                        return;
+                    }
+                    value = interpreter.prompt(field.getName() + "> ", "");
+                } while (!field.getType().validateString(value));
+                tip.setFieldValueString(field, value);
             }
         } else {
             interpreter.getIO().println("Lisää-komennolle annettiin väärä määrä argumentteja!");
@@ -65,7 +78,7 @@ public enum Command {
             interpreter.getIO().print(entry.getKey());
             ReadingTip tip = entry.getValue();
             for (ReadingTipField field : ReadingTipField.values()) {
-                interpreter.getIO().print(" | " + tip.getFieldValue(field));
+                interpreter.getIO().print(" | " + tip.getFieldValueString(field));
             }
             interpreter.getIO().println();
         });

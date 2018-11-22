@@ -1,22 +1,33 @@
 package lukuvinkit;
 
+import lukuvinkit.fields.FieldType;
+
 import java.util.Arrays;
 import java.util.List;
 
+import static lukuvinkit.TipType.BOOK;
+import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
+
 public enum ReadingTipField {
-    TITLE("Otsikko", Arrays.asList(TipType.values())),
-    DESCRIPTION("Kuvaus", Arrays.asList(TipType.values())),
-    ISBN("ISBN", Arrays.asList(TipType.BOOK));
+    TITLE("Otsikko", STRING_TYPE, Arrays.asList(TipType.values())),
+    DESCRIPTION("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values())),
+    ISBN("ISBN", STRING_TYPE, Arrays.asList(BOOK));
 
     private String name;
-    private List<TipType> associatedTypes;
+    private List<TipType> associatedTipTypes;
+    private FieldType type;
 
-    private ReadingTipField(String name, List<TipType> associatedTypes) {
+    private ReadingTipField(String name, FieldType type, List<TipType> associatedTipTypes) {
         this.name = name;
-        this.associatedTypes = associatedTypes;
+        this.type = type;
+        this.associatedTipTypes = associatedTipTypes;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public FieldType getType() {
+        return this.type;
     }
 }
