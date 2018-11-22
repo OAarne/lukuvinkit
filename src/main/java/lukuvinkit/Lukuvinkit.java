@@ -26,10 +26,11 @@ package lukuvinkit;
 public class Lukuvinkit {
 
     public static void main(String[] args) {
-        Storage storage = new Storage();
         try (IO io = new BufferedReaderIO()) {
+            Storage storage = FileSave.loadStorage("vinkit.json");
             CommandInterpreter interpreter = new CommandInterpreter(storage, io);
             interpreter.mainLoop();
+            FileSave.saveStorage("vinkit.json", storage);
         } catch (Exception e) {
             System.err.println("Virhe poistuttaessa ohjelmasta.");
             e.printStackTrace();

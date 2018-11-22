@@ -12,18 +12,18 @@ import org.json.JSONStringer;
 public class Storage {
 
     private LinkedHashMap<Integer, ReadingTip> readingTips;
-    int lastReadingTipId;
+    int nextReadingTipId;
 
     public Storage() {
         this.readingTips = new LinkedHashMap<>();
-        this.lastReadingTipId = 0;
+        this.nextReadingTipId = 0;
     }
 
     public int addReadingTip(ReadingTip readingTip) {
         //The first reading tip added will have an id of 0. This ticks up by one
         //for each new tip added so that each id is unique.
-        readingTips.put(lastReadingTipId, readingTip);
-        return lastReadingTipId++;
+        readingTips.put(nextReadingTipId, readingTip);
+        return nextReadingTipId++;
     }
 
     public void removeReadingTipById(int id) {
@@ -52,9 +52,15 @@ public class Storage {
     public static Storage fromJSON(String json) {
         Storage storage = new Storage();
         JSONObject obj = new JSONObject(json);
+        int maxId = 0;
         for (String key : obj.keySet()) {
-            storage.readingTips.put(Integer.parseInt(key), ReadingTip.fromJSONObject(obj.getJSONObject(key)));
+            Integer id = Integer.parseInt(key);
+            if (id > maxId) {
+                maxId = id;
+            }
+            storage.readingTips.put(id, ReadingTip.fromJSONObject(obj.getJSONObject(key)));
         }
+        storage.nextReadingTipId = maxId + 1;
         return storage;
     }
 }
