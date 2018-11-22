@@ -2,7 +2,6 @@ package lukuvinkit;
 
 import lukuvinkit.fields.FieldType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +12,7 @@ import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
 public enum ReadingTipField {
     TITLE("Otsikko", STRING_TYPE, Arrays.asList(TipType.values())),
-    TYPE("Tyyppi", STRING_TYPE, new ArrayList()),
+    TYPE("Tyyppi", STRING_TYPE, Collections.emptyList()),
     DESCRIPTION("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values())),
     ISBN("ISBN", STRING_TYPE, Arrays.asList(BOOK)),
     IS_READ("Luettu", BOOLEAN_TYPE, Collections.emptyList());

@@ -34,7 +34,6 @@ public enum Command {
     }
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
-        ReadingTipField[] fields = ReadingTipField.values();
         addReadingTipOfGivenType(interpreter, args, TipType.OTHER);
     }
 
