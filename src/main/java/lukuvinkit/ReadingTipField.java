@@ -14,7 +14,9 @@ public enum ReadingTipField {
     ISBN("ISBN", STRING_TYPE, Arrays.asList(BOOK));
 
     private String name;
+
     private List<TipType> associatedTipTypes;
+
     private FieldType type;
 
     private ReadingTipField(String name, FieldType type, List<TipType> associatedTipTypes) {
@@ -29,5 +31,9 @@ public enum ReadingTipField {
 
     public FieldType getType() {
         return this.type;
+    }
+
+    public List<TipType> getAssociatedTipTypes() {
+        return associatedTipTypes;
     }
 }
