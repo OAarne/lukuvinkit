@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    compile 'org.json:json:20180813'
     testCompile 'junit:junit:4.12'
     testCompile 'io.cucumber:cucumber-java:4.2.0'
 }

@@ -9,7 +9,8 @@ public enum Command {
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
     CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
-    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation);
+    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
+    PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
 
     private String commandString;
 
@@ -117,5 +118,9 @@ public enum Command {
 
     public BiConsumer<CommandInterpreter, String[]> getHandler() {
         return this.handler;
+    }
+
+    public static void printJSONImplementation(CommandInterpreter interpreter, String[] args) {
+        interpreter.getIO().println(interpreter.getStorage().toJSON());
     }
 }
