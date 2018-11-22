@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static lukuvinkit.TipType.BOOK;
+import static lukuvinkit.TipType.OTHER;
 import static lukuvinkit.fields.BooleanFieldType.BOOLEAN_TYPE;
 import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
@@ -14,7 +15,7 @@ public enum ReadingTipField {
     TITLE("Otsikko", STRING_TYPE, Arrays.asList(TipType.values())),
     TYPE("Tyyppi", STRING_TYPE, Collections.emptyList()),
     DESCRIPTION("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values())),
-    ISBN("ISBN", STRING_TYPE, Arrays.asList(BOOK)),
+    ISBN("ISBN", STRING_TYPE, Arrays.asList(BOOK, OTHER)),
     IS_READ("Luettu", BOOLEAN_TYPE, Collections.emptyList());
 
     private String name;
