@@ -7,7 +7,8 @@ public enum Command {
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
-    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation);
+    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
+    PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
 
     private String commandString;
     private String helpText;
@@ -104,5 +105,9 @@ public enum Command {
             return;
         }
         interpreter.getStorage().removeReadingTipById(id);
+    }
+
+    public static void printJSONImplementation(CommandInterpreter interpreter, String[] args) {
+        interpreter.getIO().println(interpreter.getStorage().toJSON());
     }
 }

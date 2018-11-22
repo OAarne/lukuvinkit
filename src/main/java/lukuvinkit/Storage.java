@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 public class Storage {
 
     private LinkedHashMap<Integer, ReadingTip> readingTips;
@@ -33,5 +36,25 @@ public class Storage {
 
     public List<Map.Entry<Integer, ReadingTip>> getReadingTips() {
         return new ArrayList<>(readingTips.entrySet());
+    }
+
+    public String toJSON() {
+        JSONStringer stringer = new JSONStringer();
+        stringer.object();
+        for (Map.Entry<Integer, ReadingTip> entry : readingTips.entrySet()) {
+            stringer.key(entry.getKey().toString());
+            stringer.value(entry.getValue().toJSONObject());
+        }
+        stringer.endObject();
+        return stringer.toString();
+    }
+
+    public static Storage fromJSON(String json) {
+        Storage storage = new Storage();
+        JSONObject obj = new JSONObject(json);
+        for (String key : obj.keySet()) {
+            storage.readingTips.put(Integer.parseInt(key), ReadingTip.fromJSONObject(obj.getJSONObject(key)));
+        }
+        return storage;
     }
 }
