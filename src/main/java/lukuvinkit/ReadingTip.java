@@ -2,6 +2,7 @@ package lukuvinkit;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.json.JSONObject;
 
@@ -14,15 +15,15 @@ public class ReadingTip {
     }
 
     public String getFieldValueString(ReadingTipField field) {
-        return field.getType().fieldToString(fields.getOrDefault(field, ""));
+        return Optional.ofNullable(fields.get(field)).map(field.getType()::fieldToString).orElse("");
     }
 
     public void setFieldValueString(ReadingTipField field, String value) {
         fields.put(field, field.getType().stringToField(value));
     }
 
-    public Object getFieldValue(ReadingTipField field) {
-        return fields.getOrDefault(field, "");
+    public Optional<Object> getFieldValue(ReadingTipField field) {
+        return Optional.ofNullable(fields.get(field));
     }
 
     public void setFieldValue(ReadingTipField field, Object value) {
