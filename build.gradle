@@ -24,9 +24,11 @@ jar {
 
 run {
     standardInput = System.in
+    enableAssertions = true
 }
 
 /* Tällä saadaan gradle test näyttämään cucumberin tulostamat ilmoitukset. */
 test {
     testLogging.showStandardStreams = true
+    enableAssertions = true
 }
