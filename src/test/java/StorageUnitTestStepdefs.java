@@ -50,8 +50,7 @@ public class StorageUnitTestStepdefs {
 
     @Niin("varastosta palautetaan komennolla jsoniksi json-muotoinen string")
     public void komentoJsoniksiPalauttaaJsonMuotoisenVinkin() throws Throwable {
-        assertEquals("{\"0\":{\"Otsikko\":\"Kissa\"}}"
-                , storage.toJSON());
+        assertEquals("{\"0\":{\"Otsikko\":\"Kissa\"}}", storage.toJSON());
     }
 
 }
