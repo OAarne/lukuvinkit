@@ -1,6 +1,5 @@
 package lukuvinkit;
 
-import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 public enum Command {
