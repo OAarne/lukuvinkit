@@ -1,7 +1,9 @@
 package lukuvinkit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -66,14 +68,43 @@ public class CommandInterpreter {
             if (command.equals("lopeta") || command.equals("poistu")) {
                 break;
             } else {
-                String[] args = command.split(" ");
-                Command cmdObj = COMMANDS.get(args[0]);
+                char[] chars = command.trim().toCharArray();
+                List<String> args = new ArrayList<>();
+                String currentArg = "";
+                boolean quote = false;
+                for (int i = 0; i < chars.length; i++) {
+                    if (chars[i] == '"') {
+                        quote = !quote;
+                    } else if (!quote && chars[i] == ' ') {
+                        args.add(currentArg);
+                        currentArg = "";
+                    } else if (chars[i] == '\\' && i < chars.length-1) {
+                        currentArg += escapeCode(chars[++i]);
+                    } else {
+                        currentArg += chars[i];
+                    }
+                }
+                args.add(currentArg);
+                Command cmdObj = COMMANDS.get(args.get(0));
                 if (cmdObj != null) {
-                    cmdObj.getHandler().accept(this, args);
+                    cmdObj.getHandler().accept(this, args.toArray(new String[0]));
                 } else {
                     io.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
                 }
             }
+        }
+    }
+
+    private static String escapeCode(char code) {
+        switch (code) {
+            case 'n':
+                return "\n";
+            case 'r':
+                return "\r";
+            case 't':
+                return "\t";
+            default:
+                return ""+code;
         }
     }
 }

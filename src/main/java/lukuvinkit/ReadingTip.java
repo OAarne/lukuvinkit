@@ -2,7 +2,6 @@ package lukuvinkit;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.json.JSONObject;
 
@@ -14,9 +13,8 @@ public class ReadingTip {
         this.fields = new HashMap<>();
     }
 
-    @SuppressWarnings("all")
-    public String getFieldValueString(ReadingTipField field) {
-        return Optional.ofNullable(fields.get(field)).map(field.getType()::fieldToString).orElse("");
+    public<T> String getFieldValueString(ReadingTipField<T> field) {
+        return field.getType().fieldToString(getFieldValue(field));
     }
 
     public void setFieldValueString(ReadingTipField<?> field, String value) {
@@ -24,8 +22,8 @@ public class ReadingTip {
     }
 
     @SuppressWarnings("unchecked")
-    public<T> Optional<T> getFieldValue(ReadingTipField<T> field) {
-        return Optional.ofNullable((T) fields.get(field));
+    public<T> T getFieldValue(ReadingTipField<T> field) {
+        return (T) fields.getOrDefault(field, field.getDefaultValue());
     }
 
     public<T> void setFieldValue(ReadingTipField<T> field, T value) {

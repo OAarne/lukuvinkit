@@ -53,29 +53,39 @@ public enum Command {
         ReadingTip tip = new ReadingTip();
         tip.setFieldValueString(ReadingTipField.TYPE, tipType.toString());
 
-        if (args.length == 1 + fields.length) {
-            int i = 1;
-            for (ReadingTipField<?> field : fields) {
-                if (!field.getType().validateString(args[i])) {
-                    interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
+        if (args.length > 1) {
+            for (int i = 1; i < args.length; i++) {
+                int sepIndex = args[i].indexOf('=');
+                if (sepIndex == -1) {
+                    interpreter.getIO().println("Argumentti `" + args[i] + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
                     return;
                 }
-                tip.setFieldValueString(field, args[i]);
-                i++;
+                String fieldName = args[i].substring(0, sepIndex);
+                String fieldValue = args[i].substring(sepIndex+1);
+                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
+                if (field == null) {
+                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
+                    return;
+                }
+                if (!field.getType().validateString(fieldValue)) {
+                    interpreter.getIO().println("Kentän `" + fieldName + "' arvo `" + fieldValue + "' ei ole kelvollinen.");
+                    return;
+                }
+                tip.setFieldValueString(field, fieldValue);
             }
         } else if (args.length == 1) {
             for (ReadingTipField<?> field : fields) {
                 Optional<String> value = Optional.empty();
                 do {
                     if (value.isPresent()) {
-                        interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
+                        interpreter.getIO().println("Kentän `" + field.getName() + "' arvo ei ole kelvollinen.");
                     }
                     value = interpreter.prompt(field.getName() + "> ");
                 } while (value.isPresent() && !field.getType().validateString(value.get()));
                 if (value.isPresent()) {
                     tip.setFieldValueString(field, value.get());
                 } else {
-                    interpreter.getIO().println("Kentän " + field.getName() + " arvoa ei annettu. Lopetetaan lisääminen.");
+                    interpreter.getIO().println("Kentän `" + field.getName() + "' arvoa ei annettu. Lopetetaan lisääminen.");
                     return;
                 }
             }
