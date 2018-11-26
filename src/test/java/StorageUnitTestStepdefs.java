@@ -47,4 +47,10 @@ public class StorageUnitTestStepdefs {
     public void varastonPalauttamallaListallaOnKaksiVinkkiä() throws Throwable {
         assertEquals(2, storage.getReadingTips().size());
     }
+
+    @Niin("varastosta palautetaan komennolla jsoniksi json-muotoinen string")
+    public void komentoJsoniksiPalauttaaJsonMuotoisenVinkin() throws Throwable {
+        assertEquals("{\"0\":{\"Otsikko\":\"Kissa\"}}", storage.toJSON());
+    }
+
 }
