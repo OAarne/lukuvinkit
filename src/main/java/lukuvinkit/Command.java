@@ -69,7 +69,6 @@ public enum Command {
                 do {
                     if (value.isPresent()) {
                         interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
-                        return;
                     }
                     value = interpreter.prompt(field.getName() + "> ");
                 } while (value.isPresent() && !field.getType().validateString(value.get()));
