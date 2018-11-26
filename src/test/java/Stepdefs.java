@@ -47,4 +47,34 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
         assertTrue(output.get(output.size()-2).contains("Tunniste | Otsikko | "));
     }
+
+    @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on lisätty$")
+    public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        inputLines.add("vinkki otsikko=\"" + otsikko + "\" kuvaus=\"" + kuvaus + "\"");
+    }
+
+    @Kun("^Ohjelma on käynnistetty uudelleen$")
+    public void ohjelmaOnKäynnistettyUudelleen() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        inputLines.add("lopeta");
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        inputLines = new ArrayList<>();
+    }
+
+    @Niin("^tulosteessa esiintyy vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void tulosteessaEsiintyyVinkkiOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+
+        assertTrue(output.stream().anyMatch(s -> s.contains(otsikko) && s.contains(kuvaus)));
+    }
 }
