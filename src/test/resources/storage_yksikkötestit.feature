@@ -17,3 +17,10 @@ Ominaisuus: Storage-luokka toimii
         Kun varastoon on lisätty vinkki otsikolla "Kissa"
         Ja varastoon on lisätty vinkki otsikolla "Koira"
         Niin varaston palauttamalla listalla on kaksi vinkkiä
+
+
+    Tapaus:
+        Oletetaan että varasto on vasta luotu
+        Kun varastoon on lisätty vinkki otsikolla "Kissa"
+        Niin varastosta palautetaan komennolla jsoniksi json-muotoinen string
+
