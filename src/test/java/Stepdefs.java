@@ -3,6 +3,7 @@ import cucumber.api.java.fi.Niin;
 import lukuvinkit.CommandInterpreter;
 import lukuvinkit.Storage;
 import lukuvinkit.StubIO;
+import lukuvinkit.TipType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,11 @@ public class Stepdefs {
     @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on lisätty$")
     public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) throws Throwable {
         inputLines.add("vinkki Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+    }
+
+    @Kun("^käyttäjä on lisännyt kirjan otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void käyttäjäOnLisännytKirjanOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("kirja Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Kun("^Ohjelma on käynnistetty uudelleen$")
@@ -61,6 +67,11 @@ public class Stepdefs {
         inputLines.add("poista " + id);
     }
 
+    @Kun("^käyttäjä on lisännyt artikkelin otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void käyttäjäOnLisännytArtikkelinOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+    }
+
     @Niin("^listalla ei ole yhtään vinkkiä$")
     public void listallaEiOleYhtäänVinkkiä() throws Throwable {
         inputLines.add("listaa");
@@ -89,7 +100,37 @@ public class Stepdefs {
     public void tulosteessaEiEsiinnyVinkkiäOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
         esiintyyköTulosteessaVinkkiOtsikollaJaKuvauksella(otsikko, kuvaus, false);
     }
-    
+
+    @Niin("^listalla on artikkeli otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void listallaOnArtikkeliOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+
+        assertTrue(output.stream().anyMatch(
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.toString())
+        ));
+    }
+
+    @Niin("^listalla on kirja otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void listallaOnKirjaOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+
+        assertTrue(output.stream().anyMatch(
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.toString())
+        ));
+    }
+
     // apumetodit
 
     public void esiintyyköTulosteessaVinkkiOtsikollaJaKuvauksella(String otsikko, String kuvaus, boolean esiintyy) {
