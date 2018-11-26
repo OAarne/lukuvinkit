@@ -2,6 +2,7 @@ package lukuvinkit;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.json.JSONObject;
 
@@ -50,5 +51,13 @@ public class ReadingTip {
             }
         }
         return tip;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReadingTip)) return false;
+        ReadingTip that = (ReadingTip) o;
+        return Objects.equals(fields, that.fields);
     }
 }

@@ -11,6 +11,7 @@ import static lukuvinkit.ReadingTipField.*;
 
 public class StorageUnitTestStepdefs {
     private Storage storage;
+    private Storage jsonstorage;
     private int previousId;
 
     @Oletetaan("että varasto on vasta luotu")
@@ -28,6 +29,11 @@ public class StorageUnitTestStepdefs {
     @Kun("^varastosta on poistettu vinkki varaston palauttamalla tunnisteella$")
     public void varastostaOnPoistettuVinkkiVarastonPalauttamallaTunnisteella() throws Throwable {
         storage.removeReadingTipById(previousId);
+    }
+
+    @Kun("^luodaan varasto jsonmuotoisesta vinkistä \"Kissa\"$")
+    public void luodaanVarastoJsonMuotoisestaVinkistä() throws Throwable {
+        jsonstorage = storage.fromJSON("{\"0\":{\"Otsikko\":\"Kissa\"}}");
     }
 
     @Niin("varaston palauttamalla tunnisteella haetun vinkin otsikko on {string}")
@@ -51,6 +57,14 @@ public class StorageUnitTestStepdefs {
     @Niin("varastosta palautetaan komennolla jsoniksi json-muotoinen string")
     public void komentoJsoniksiPalauttaaJsonMuotoisenVinkin() throws Throwable {
         assertEquals("{\"0\":{\"Otsikko\":\"Kissa\"}}", storage.toJSON());
+    }
+
+    @Niin("^varastojen sisällöt ovat samat$")
+    public void varastojenSisällötOvatSamat() throws Throwable {
+        Optional tip1 = storage.getReadingTipById(0);
+        Optional tip2 = jsonstorage.getReadingTipById(0);
+
+        assertEquals(tip1, tip2);
     }
 
 }
