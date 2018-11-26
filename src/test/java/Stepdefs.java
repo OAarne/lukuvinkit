@@ -41,17 +41,6 @@ public class Stepdefs {
         inputLines = new ArrayList<>();
     }
 
-    @Niin("^listalla ei ole yhtään vinkkiä$")
-    public void listallaEiOleYhtäänVinkkiä() throws Throwable {
-        inputLines.add("listaa");
-        inputLines.add("lopeta");
-        io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
-        app.mainLoop();
-        List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size()-2).contains("Tunniste | Otsikko | "));
-    }
-
     @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on poistettu$")
     public void vinkkiOtsikollaJaKuvauksellaOnPoistettu(String otsikko, String kuvaus) throws Throwable {
         inputLines.add("listaa");
@@ -70,12 +59,17 @@ public class Stepdefs {
         String id = vinkinOsat[0];
 
         inputLines.add("poista " + id);
-        inputLines.add("lopeta");
+    }
 
+    @Niin("^listalla ei ole yhtään vinkkiä$")
+    public void listallaEiOleYhtäänVinkkiä() throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
         io = new StubIO(inputLines);
         app = new CommandInterpreter(storage, io);
         app.mainLoop();
-        inputLines = new ArrayList<>();
+        List<String> output = io.getOutputs();
+        assertTrue(output.get(output.size()-2).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
