@@ -1,11 +1,9 @@
 package lukuvinkit.fields;
 
-public interface FieldType {
+public interface FieldType<T> {
     public boolean validateString(String strRep);
 
-    public Object stringToField(String strRep);
-
-    public boolean validateObject(Object obj);
+    public T stringToField(String strRep);
     
-    public String fieldToString(Object obj);
+    public String fieldToString(T obj);
 }

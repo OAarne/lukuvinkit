@@ -1,7 +1,7 @@
 package lukuvinkit.fields;
 
-public class BooleanFieldType implements FieldType {
-    public static final FieldType BOOLEAN_TYPE = new BooleanFieldType();
+public class BooleanFieldType implements FieldType<Boolean> {
+    public static final FieldType<Boolean> BOOLEAN_TYPE = new BooleanFieldType();
 
     private BooleanFieldType() {}
 
@@ -11,7 +11,7 @@ public class BooleanFieldType implements FieldType {
     }
 
     @Override
-    public Object stringToField(String strRep) {
+    public Boolean stringToField(String strRep) {
         switch (strRep) {
             case "True":
                 return Boolean.TRUE;
@@ -24,13 +24,7 @@ public class BooleanFieldType implements FieldType {
     }
 
     @Override
-    public boolean validateObject(Object obj) {
-        return obj instanceof Boolean;
-    }
-
-    @Override
-    public String fieldToString(Object obj) {
-        assert validateObject(obj);
+    public String fieldToString(Boolean obj) {
         return ((Boolean) obj) ? "True" : "False";
     }
 }

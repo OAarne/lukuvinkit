@@ -46,15 +46,16 @@ public enum Command {
     }
 
     private static void addReadingTipOfGivenType(CommandInterpreter interpreter, String[] args, TipType tipType) {
-        ReadingTipField[] fields = Arrays.stream(ReadingTipField.values()).filter(field ->
-            field.getAssociatedTipTypes().contains(tipType)
-        ).toArray(ReadingTipField[]::new);
+        ReadingTipField<?>[] fields =
+            ReadingTipField.VALUES.stream()
+            .filter(field -> field.getAssociatedTipTypes().contains(tipType))
+            .toArray(ReadingTipField[]::new);
         ReadingTip tip = new ReadingTip();
         tip.setFieldValueString(ReadingTipField.TYPE, tipType.toString());
 
         if (args.length == 1 + fields.length) {
             int i = 1;
-            for (ReadingTipField field : fields) {
+            for (ReadingTipField<?> field : fields) {
                 if (!field.getType().validateString(args[i])) {
                     interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
                     return;
@@ -63,7 +64,7 @@ public enum Command {
                 i++;
             }
         } else if (args.length == 1) {
-            for (ReadingTipField field : fields) {
+            for (ReadingTipField<?> field : fields) {
                 String value = null;
                 do {
                     if (value != null) {
@@ -84,14 +85,14 @@ public enum Command {
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
         interpreter.getIO().print("Tunniste");
-        for (ReadingTipField field : ReadingTipField.values()) {
+        for (ReadingTipField<?> field : ReadingTipField.VALUES) {
             interpreter.getIO().print(" | " + field.getName());
         }
         interpreter.getIO().println();
         interpreter.getStorage().getReadingTips().forEach(entry -> {
             interpreter.getIO().print(entry.getKey());
             ReadingTip tip = entry.getValue();
-            for (ReadingTipField field : ReadingTipField.values()) {
+            for (ReadingTipField<?> field : ReadingTipField.VALUES) {
                 interpreter.getIO().print(" | " + tip.getFieldValueString(field));
             }
             interpreter.getIO().println();

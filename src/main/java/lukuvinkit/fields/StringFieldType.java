@@ -1,7 +1,7 @@
 package lukuvinkit.fields;
 
-public class StringFieldType implements FieldType {
-    public static final FieldType STRING_TYPE = new StringFieldType();
+public class StringFieldType implements FieldType<String> {
+    public static final FieldType<String> STRING_TYPE = new StringFieldType();
 
     private StringFieldType() {}
 
@@ -11,18 +11,12 @@ public class StringFieldType implements FieldType {
     }
 
     @Override
-    public Object stringToField(String strRep) {
+    public String stringToField(String strRep) {
         return strRep;
     }
 
     @Override
-    public boolean validateObject(Object obj) {
-        return obj instanceof String;
-    }
-
-    @Override
-    public String fieldToString(Object obj) {
-        assert validateObject(obj);
-        return (String) obj;
+    public String fieldToString(String obj) {
+        return obj;
     }
 }
