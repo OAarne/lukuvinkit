@@ -32,3 +32,12 @@ test {
     testLogging.showStandardStreams = true
     enableAssertions = true
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes "Main-Class": mainClassName
+    }
+    baseName = project.name + "-fat"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
