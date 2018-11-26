@@ -1,12 +1,11 @@
 package lukuvinkit;
 
-import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 public enum Command {
 
     HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
-    CREATE("lisää", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
+    CREATE("vinkki", "lisää uuden muu-tyyppisen lukuvinkin", Command::addReadingTipImplementation),
     CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
     CREATE_ARTICLE("artikkeli", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
     MARK_READ("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
