@@ -1,5 +1,6 @@
 package lukuvinkit;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public enum Command {
@@ -64,15 +65,19 @@ public enum Command {
             }
         } else if (args.length == 1) {
             for (ReadingTipField<?> field : fields) {
-                String value = null;
+                Optional<String> value = Optional.empty();
                 do {
-                    if (value != null) {
+                    if (value.isPresent()) {
                         interpreter.getIO().println("Kentän " + field.getName() + " arvo ei ole kelvollinen.");
-                        return;
                     }
-                    value = interpreter.prompt(field.getName() + "> ", "");
-                } while (!field.getType().validateString(value));
-                tip.setFieldValueString(field, value);
+                    value = interpreter.prompt(field.getName() + "> ");
+                } while (value.isPresent() && !field.getType().validateString(value.get()));
+                if (value.isPresent()) {
+                    tip.setFieldValueString(field, value.get());
+                } else {
+                    interpreter.getIO().println("Kentän " + field.getName() + " arvoa ei annettu. Lopetetaan lisääminen.");
+                    return;
+                }
             }
         } else {
             interpreter.getIO().println("Lisää-komennolle annettiin väärä määrä argumentteja!");

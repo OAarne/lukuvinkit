@@ -1,6 +1,7 @@
 package lukuvinkit;
 
 import lukuvinkit.fields.FieldType;
+import lukuvinkit.fields.ValidatedStringFieldType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,8 @@ import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 public class ReadingTipField<T> {
     public static final List<ReadingTipField<? extends Object>> VALUES = new ArrayList<>();
 
-    public static final ReadingTipField<String> TITLE = new ReadingTipField<>("Otsikko", STRING_TYPE, Arrays.asList(TipType.values()));
+    public static final ReadingTipField<String> TITLE =
+        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType("\\S+"), Arrays.asList(TipType.values()));
     public static final ReadingTipField<String> TYPE = new ReadingTipField<>("Tyyppi", STRING_TYPE, Collections.emptyList());
     public static final ReadingTipField<String> DESCRIPTION = new ReadingTipField<>("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values()));
     public static final ReadingTipField<String> ISBN = new ReadingTipField<>("ISBN", STRING_TYPE, Arrays.asList(BOOK, OTHER));

@@ -3,6 +3,7 @@ package lukuvinkit;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CommandInterpreter {
 
@@ -31,21 +32,30 @@ public class CommandInterpreter {
     }
 
     /**
-     * Query an input from the user using a prompt
+     * Query an input from the user using a prompt.
      *
      * @param prompt the prompt shown to the user
      * @param defaultValue This value is returned if the input stream is closed.
      * @return The inputted text.
      */
     public String prompt(String prompt, String defaultValue) {
+        return prompt(prompt).orElse(defaultValue);
+    }
+
+    /**
+     * Query an input from the user using a prompt.
+     *
+     * @param prompt the prompt shown to the user
+     * @return The inputted text, or {@code Optional.empty()} if the stream is closed.
+     */
+    public Optional<String> prompt(String prompt) {
         io.print(prompt);
         io.flush();
         try {
-            String input = io.readLine();
-            return input == null ? defaultValue : input;
+            return Optional.ofNullable(io.readLine());
         } catch (IOException e) {
             io.println("Virhe syötteen luvussa!");
-            return defaultValue;
+            return Optional.empty();
         }
     }
 
