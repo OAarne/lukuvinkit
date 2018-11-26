@@ -51,7 +51,7 @@ public class Stepdefs {
     @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on lisätty$")
     public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        inputLines.add("vinkki otsikko=\"" + otsikko + "\" kuvaus=\"" + kuvaus + "\"");
+        inputLines.add("vinkki Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Kun("^Ohjelma on käynnistetty uudelleen$")
