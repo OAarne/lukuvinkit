@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import lukuvinkit.Translated;
 
-public class EnumFieldType<T extends Enum<T> & Translated> implements FieldType<T> {
+public class EnumFieldType<T extends Translated> implements FieldType<T> {
     private T[] values;
 
     public EnumFieldType(T[] values) {

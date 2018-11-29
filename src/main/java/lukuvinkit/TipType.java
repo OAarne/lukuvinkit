@@ -15,6 +15,7 @@ public enum TipType implements Translated {
         return name;
     }
 
+    @Override
     public String getFinnishTranslation() {
         return getName();
     }

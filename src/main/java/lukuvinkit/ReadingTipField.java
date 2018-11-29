@@ -16,7 +16,7 @@ import static lukuvinkit.TipType.OTHER;
 import lukuvinkit.fields.BooleanFieldType;
 import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
-public class ReadingTipField<T> {
+public class ReadingTipField<T> implements Translated {
     public static final List<ReadingTipField<? extends Object>> VALUES = new ArrayList<>();
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
@@ -47,6 +47,11 @@ public class ReadingTipField<T> {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getFinnishTranslation() {
+        return getName();
     }
 
     public FieldType<T> getType() {
