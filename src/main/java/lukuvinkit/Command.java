@@ -3,37 +3,48 @@ package lukuvinkit;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toSet;
 
 public enum Command {
 
-    HELP("ohje", "tulostaa ohjeen", Command::printHelpImplementation),
-    CREATE("vinkki", "lisää uuden muu-tyyppisen lukuvinkin", Command::addReadingTipImplementation),
-    CREATE_BOOK("kirja", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
-    CREATE_ARTICLE("artikkeli", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
-    MARK_READ("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
-    REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
-    LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
-    SEARCH("hae", "listaa annettuja tietoja vastaavat vinkit", Command::searchReadingTipImplementation),
-    SHOW("näytä", "näyttää lukuvinkin tiedot", Command::showReadingTipImplementation),
-    PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
+    HELP("ohje", "Ohjekomennot", "tulostaa ohjeen", Command::printHelpImplementation),
+    CREATE("vinkki", "Luomiskomennot", "lisää uuden muu-tyyppisen lukuvinkin", Command::addReadingTipImplementation),
+    CREATE_BOOK("kirja", "Luomiskomennot", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
+    CREATE_ARTICLE("artikkeli", "Luomiskomennot", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
+    MARK_READ("luettu", "Muokkauskomennot", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
+    REMOVE("poista", "Muokkauskomennot", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
+    LIST("listaa", "Näyttämiskomennot", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
+    SEARCH("hae", "Näyttämiskomennot", "listaa annettuja tietoja vastaavat vinkit", Command::searchReadingTipImplementation),
+    SHOW("näytä", "Näyttämiskomennot", "näyttää lukuvinkin tiedot", Command::showReadingTipImplementation),
+    PRINT_JSON("jsoniksi", "Näyttämiskomennot", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
 
     private String commandString;
 
     private String helpText;
+    private String group;
     private BiConsumer<CommandInterpreter, String[]> handler;
 
-    private Command(String command, String helpText, BiConsumer<CommandInterpreter, String[]> handler) {
+    private Command(String command, String group, String helpText, BiConsumer<CommandInterpreter, String[]> handler) {
         this.commandString = command;
+        this.group = group;
         this.helpText = helpText;
         this.handler = handler;
     }
 
     // Command implementations
     public static void printHelpImplementation(CommandInterpreter interpreter, String[] args) {
-        interpreter.getIO().println("Tuetut komennot:");
-        for (Command cmd : Command.values()) {
-            interpreter.getIO().println(cmd.commandString + " - " + cmd.helpText);
-        }
+        IO io = interpreter.getIO();
+        List<Command> commands = Arrays.asList(values());
+        Set<String> groups = commands.stream().map(Command::getGroup).collect(toSet());
+        groups.stream().sorted().forEachOrdered(group -> {
+            io.println(group + ":");
+            commands.stream()
+                .filter(c -> c.group.equals(group))
+                .sorted((a, b) -> a.commandString.compareTo(b.commandString))
+                .forEachOrdered(c -> io.println("  " + c.commandString + " - " + c.helpText));
+        });
     }
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
@@ -295,6 +306,10 @@ public enum Command {
 
     public String getHelpText() {
         return this.helpText;
+    }
+
+    public String getGroup() {
+        return this.group;
     }
 
     public BiConsumer<CommandInterpreter, String[]> getHandler() {

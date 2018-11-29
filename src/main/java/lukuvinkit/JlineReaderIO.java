@@ -2,9 +2,10 @@ package lukuvinkit;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import static java.util.stream.Collectors.toList;
 
 import org.jline.reader.*;
-import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -14,11 +15,14 @@ public class JlineReaderIO implements IO {
     private LineReader reader;
 
     public JlineReaderIO() throws IOException {
-        String[] commands = Arrays.asList(Command.values()).stream().map(Command::getCommandString).sorted().toArray(String[]::new);
+        List<Candidate> commands = Arrays.asList(Command.values())
+            .stream()
+            .map(c -> new Candidate(c.getCommandString(), c.getCommandString(), c.getGroup(), c.getHelpText(), null, null, true))
+            .collect(toList());
         this.terminal = TerminalBuilder.terminal();
         this.reader = LineReaderBuilder
             .builder()
-            .completer(new StringsCompleter(commands))
+            .completer((_r, _c, candidates) -> candidates.addAll(commands))
             .build();
     }
 
