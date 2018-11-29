@@ -167,7 +167,25 @@ public enum Command {
         HashMap<ReadingTipField<?>, String> tip = new HashMap<>();
 
         if (args.length > 1) {
-            interpreter.getIO().println("Tällaista hakua ei vielä tueta");
+            for (ReadingTipField<?> field : fields) {
+                tip.put(field, "");
+            }
+
+            for (int i = 1; i < args.length; i++) {
+                int sepIndex = args[i].indexOf('=');
+                if (sepIndex == -1) {
+                    interpreter.getIO().println("Argumentti `" + args[i] + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
+                    return;
+                }
+                String fieldName = args[i].substring(0, sepIndex);
+                String fieldValue = args[i].substring(sepIndex+1);
+                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
+                if (field == null) {
+                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
+                    return;
+                }
+                tip.put(field, fieldValue);
+            }
         } else if (args.length == 1) {
             for (ReadingTipField<?> field : fields) {
                 Optional<String> value = Optional.empty();
@@ -224,10 +242,9 @@ public enum Command {
     }
 
     private static void printTipList(CommandInterpreter interpreter, List<Map.Entry<Integer, ReadingTip>> tips) {
-        List<Map.Entry<Integer, ReadingTip>> entries = interpreter.getStorage().getReadingTips();
         List<ReadingTipField<?>> fields = ReadingTipField.VALUES;
 
-        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][entries.size() + 1];
+        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][tips.size() + 1];
         int[] columnMaxWidth = new int[ReadingTipField.VALUES.size() + 1];
 
         outputMatrix[0][0] = "Tunniste";
@@ -236,8 +253,8 @@ public enum Command {
             ReadingTipField<?> field = fields.get(x - 1);
             outputMatrix[x][0] = field.getName();
             columnMaxWidth[x] = field.getName().length();
-            for (int y = 1; y <= entries.size(); y++) {
-                String value = entries.get(y-1).getValue().getFieldValueString(field);
+            for (int y = 1; y <= tips.size(); y++) {
+                String value = tips.get(y-1).getValue().getFieldValueString(field);
                 if (value.length() > 40) {
                     value = value.substring(0, 40) + "...";
                 }
@@ -246,11 +263,11 @@ public enum Command {
             }
         }
         IntStream
-            .rangeClosed(1, entries.size())
-            .forEachOrdered(y -> outputMatrix[0][y] = entries.get(y-1).getKey().toString());
+            .rangeClosed(1, tips.size())
+            .forEachOrdered(y -> outputMatrix[0][y] = tips.get(y-1).getKey().toString());
 
         IO io = interpreter.getIO();
-        for (int y = 0; y <= entries.size(); y++) {
+        for (int y = 0; y <= tips.size(); y++) {
             io.print("|");
             for (int x = 0; x <= fields.size(); x++) {
                 io.print(" ");
