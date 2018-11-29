@@ -1,17 +1,19 @@
+package systemstepdefs;
+
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lukuvinkit.CommandInterpreter;
 import lukuvinkit.Storage;
 import lukuvinkit.StubIO;
 import lukuvinkit.TipType;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.junit.Assert.*;
 
 public class Stepdefs {
+
     CommandInterpreter app;
     StubIO io;
     Storage storage = new Storage();
@@ -42,7 +44,7 @@ public class Stepdefs {
     public void ohjelmaOnKäynnistettyUudelleen() throws Throwable {
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         inputLines = new ArrayList<>();
     }
@@ -52,7 +54,7 @@ public class Stepdefs {
         inputLines.add("listaa");
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
         inputLines = new ArrayList<>();
@@ -77,16 +79,16 @@ public class Stepdefs {
         inputLines.add("listaa");
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
+        assertTrue(output.get(output.size() - 3).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
     public void applicationIsClosed() throws Throwable {
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
     }
 
@@ -107,12 +109,12 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
+                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
         ));
     }
 
@@ -122,12 +124,12 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
+                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
         ));
     }
 
@@ -138,7 +140,7 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 

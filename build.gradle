@@ -1,5 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 apply plugin: 'java'
@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     compile 'org.json:json:20180813'
+    compile 'org.jline:jline:3.9.0'
     testCompile 'junit:junit:4.12'
     testCompile 'io.cucumber:cucumber-java:4.2.0'
     testCompile 'io.cucumber:cucumber-junit:4.2.0'
@@ -46,7 +47,7 @@ jacocoTestReport {
     reports {
         /* Xml-raportti tarvitaan codecovia varten. */
         xml.enabled true
-        html.enabled false
+        html.enabled true
     }
 }
 
