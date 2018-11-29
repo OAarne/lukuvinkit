@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     compile 'org.json:json:20180813'
+    compile 'org.jline:jline-terminal:3.9.0'
     testCompile 'junit:junit:4.12'
     testCompile 'io.cucumber:cucumber-java:4.2.0'
     testCompile 'io.cucumber:cucumber-junit:4.2.0'
