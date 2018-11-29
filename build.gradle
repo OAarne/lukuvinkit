@@ -1,3 +1,7 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'checkstyle'
@@ -27,10 +31,18 @@ run {
     enableAssertions = true
 }
 
-/* Tällä saadaan gradle test näyttämään cucumberin tulostamat ilmoitukset. */
 test {
+    /* Tällä saadaan gradle test näyttämään cucumberin tulostamat ilmoitukset. */
     testLogging.showStandardStreams = true
     enableAssertions = true
+}
+
+jacocoTestReport {
+    reports {
+        /* Xml-raportti tarvitaan codecovia varten. */
+        xml.enabled true
+        html.enabled false
+    }
 }
 
 task fatJar(type: Jar) {

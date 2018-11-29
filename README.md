@@ -1,6 +1,8 @@
 # lukuvinkit
 [![Build Status](https://travis-ci.org/OAarne/lukuvinkit.svg?branch=master)](https://travis-ci.org/OAarne/lukuvinkit)
 
+[![codecov](https://codecov.io/gh/OAarne/lukuvinkit/branch/master/graph/badge.svg)](https://codecov.io/gh/OAarne/lukuvinkit)
+
 lukuvinkit tutuksi
 
 ## Valmiin määritelmä
