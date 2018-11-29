@@ -62,7 +62,7 @@ public class Stepdefs {
 
         String vinkki = vastaavatVinkit.get(0);
         String[] vinkinOsat = vinkki.split(" ");
-        String id = vinkinOsat[0];
+        String id = vinkinOsat[1];
 
         inputLines.add("poista " + id);
     }
@@ -70,6 +70,17 @@ public class Stepdefs {
     @Kun("^käyttäjä on lisännyt artikkelin otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
     public void käyttäjäOnLisännytArtikkelinOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
         inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+    }
+
+    @Niin("^listalla ei ole yhtään vinkkiä$")
+    public void listallaEiOleYhtäänVinkkiä() throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+        assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
@@ -101,7 +112,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.toString())
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
         ));
     }
 
@@ -116,7 +127,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.toString())
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
         ));
     }
 
