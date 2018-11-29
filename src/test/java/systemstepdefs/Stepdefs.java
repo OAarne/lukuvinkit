@@ -1,18 +1,19 @@
+package systemstepdefs;
+
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
-import lukuvinkit.CommandInterpreter;
-import lukuvinkit.Storage;
-import lukuvinkit.StubIO;
-import lukuvinkit.TipType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import lukuvinkit.CommandInterpreter;
+import lukuvinkit.Storage;
+import lukuvinkit.StubIO;
+import lukuvinkit.TipType;
 import static org.junit.Assert.*;
 
 public class Stepdefs {
+
     CommandInterpreter app;
     StubIO io;
     Storage storage = new Storage();
@@ -81,7 +82,7 @@ public class Stepdefs {
         app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
+        assertTrue(output.get(output.size() - 3).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
@@ -113,7 +114,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
+                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
         ));
     }
 
@@ -128,7 +129,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
+                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
         ));
     }
 

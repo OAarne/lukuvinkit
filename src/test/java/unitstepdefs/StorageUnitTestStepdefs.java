@@ -1,15 +1,16 @@
+package unitstepdefs;
+
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
 import cucumber.api.java.fi.Oletetaan;
-import static org.junit.Assert.*;
-
 import java.util.Optional;
-
-import lukuvinkit.Storage;
 import lukuvinkit.ReadingTip;
 import static lukuvinkit.ReadingTipField.*;
+import lukuvinkit.Storage;
+import static org.junit.Assert.*;
 
 public class StorageUnitTestStepdefs {
+
     private Storage storage;
     private Storage jsonstorage;
     private int previousId;

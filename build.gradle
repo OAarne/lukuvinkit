@@ -1,5 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 apply plugin: 'java'
@@ -47,7 +47,7 @@ jacocoTestReport {
     reports {
         /* Xml-raportti tarvitaan codecovia varten. */
         xml.enabled true
-        html.enabled false
+        html.enabled true
     }
 }
 
