@@ -26,7 +26,7 @@ package lukuvinkit;
 public class Lukuvinkit {
 
     public static void main(String[] args) throws InterruptedException {
-        try (IO io = new BufferedReaderIO()) {
+        try (IO io = new JlineReaderIO()) {
             CommandInterpreter interpreter = new CommandInterpreter(io, "vinkit.json");
             interpreter.mainLoop();
         } catch (Exception e) {
