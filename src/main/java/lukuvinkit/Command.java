@@ -1,9 +1,6 @@
 package lukuvinkit;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
@@ -16,6 +13,7 @@ public enum Command {
     MARK_READ("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
+    SEARCH("hae", "listaa annettuja tietoja vastaavat vinkit", Command::searchReadingTipImplementation),
     PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
 
     private String commandString;
@@ -102,48 +100,7 @@ public enum Command {
     }
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
-        List<Map.Entry<Integer, ReadingTip>> entries = interpreter.getStorage().getReadingTips();
-        List<ReadingTipField<?>> fields = ReadingTipField.VALUES;
-
-        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][entries.size() + 1];
-        int[] columnMaxWidth = new int[ReadingTipField.VALUES.size() + 1];
-
-        outputMatrix[0][0] = "Tunniste";
-        columnMaxWidth[0] = 8;
-        for (int x = 1; x <= fields.size(); x++) {
-            ReadingTipField<?> field = fields.get(x - 1);
-            outputMatrix[x][0] = field.getName();
-            columnMaxWidth[x] = field.getName().length();
-            for (int y = 1; y <= entries.size(); y++) {
-                String value = entries.get(y-1).getValue().getFieldValueString(field);
-                if (value.length() > 20) {
-                    value = value.substring(0, 40) + "...";
-                }
-                outputMatrix[x][y] = value;
-                if (value.length() > columnMaxWidth[x]) columnMaxWidth[x] = value.length();
-            }
-        }
-        IntStream
-            .rangeClosed(1, entries.size())
-            .forEachOrdered(y -> outputMatrix[0][y] = entries.get(y-1).getKey().toString());
-        
-        IO io = interpreter.getIO();
-        for (int y = 0; y <= entries.size(); y++) {
-            io.print("|");
-            for (int x = 0; x <= fields.size(); x++) {
-                io.print(" ");
-                io.print(outputMatrix[x][y]);
-                IntStream
-                    .range(0, columnMaxWidth[x] - outputMatrix[x][y].length())
-                    .forEach(_i -> io.print(" "));
-                io.print(" |");
-            }
-            io.println();
-
-            if (y == 0) {
-                io.println(String.join("", Collections.nCopies(IntStream.of(columnMaxWidth).map(i -> i + 3).sum() + 1, "-")));
-            }
-        }
+        printTipList(interpreter, interpreter.getStorage().getReadingTips());
     }
 
     public static void markReadImplementation(CommandInterpreter interpreter, String[] args) {
@@ -188,6 +145,42 @@ public enum Command {
         interpreter.getStorage().removeReadingTipById(id);
     }
 
+    private static void searchReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+        ReadingTipField<?>[] fields = ReadingTipField.VALUES.stream().toArray(ReadingTipField[]::new);
+        HashMap<ReadingTipField<?>, String> tip = new HashMap<>();
+
+        if (args.length > 1) {
+            interpreter.getIO().println("Tällaista hakua ei vielä tueta");
+        } else if (args.length == 1) {
+            for (ReadingTipField<?> field : fields) {
+                Optional<String> value = Optional.empty();
+                value = interpreter.prompt(field.getName() + "> ");
+                tip.put(field, value.get());
+            }
+        } else {
+            interpreter.getIO().println("Komennolle annettiin väärä määrä argumentteja!");
+            return;
+        }
+        List<Map.Entry<Integer, ReadingTip>> searchSpace = interpreter.getStorage().getReadingTips();
+        ArrayList<Map.Entry<Integer, ReadingTip>> results = new ArrayList<>();
+
+        for (Map.Entry<Integer, ReadingTip> entry : searchSpace) {
+            boolean match = true;
+            for (ReadingTipField<?> field : fields) {
+                String entryField = entry.getValue().getFieldValueString(field);
+                String tipField = tip.get(field);
+                String[] terms = tipField.split(" ");
+                if (!Arrays.stream(terms).anyMatch(s -> entryField.contains(s))) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) results.add(entry);
+        }
+
+        printTipList(interpreter, results);
+    }
+
     private static int promptId(CommandInterpreter interpreter) {
         int id = -1;
         do {
@@ -210,6 +203,52 @@ public enum Command {
             return false;
         } else {
             return true;
+        }
+    }
+
+    private static void printTipList(CommandInterpreter interpreter, List<Map.Entry<Integer, ReadingTip>> tips) {
+        List<Map.Entry<Integer, ReadingTip>> entries = tips;
+        List<ReadingTipField<?>> fields = ReadingTipField.VALUES;
+
+        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][entries.size() + 1];
+        int[] columnMaxWidth = new int[ReadingTipField.VALUES.size() + 1];
+
+        outputMatrix[0][0] = "Tunniste";
+        columnMaxWidth[0] = 8;
+        for (int x = 1; x <= fields.size(); x++) {
+            ReadingTipField<?> field = fields.get(x - 1);
+            outputMatrix[x][0] = field.getName();
+            columnMaxWidth[x] = field.getName().length();
+            for (int y = 1; y <= entries.size(); y++) {
+                String value = entries.get(y-1).getValue().getFieldValueString(field);
+                if (value.length() > 20) {
+                    if (value.length() > 40) value = value.substring(0, 40);
+                    value += "...";
+                }
+                outputMatrix[x][y] = value;
+                if (value.length() > columnMaxWidth[x]) columnMaxWidth[x] = value.length();
+            }
+        }
+        IntStream
+            .rangeClosed(1, entries.size())
+            .forEachOrdered(y -> outputMatrix[0][y] = entries.get(y-1).getKey().toString());
+
+        IO io = interpreter.getIO();
+        for (int y = 0; y <= entries.size(); y++) {
+            io.print("|");
+            for (int x = 0; x <= fields.size(); x++) {
+                io.print(" ");
+                io.print(outputMatrix[x][y]);
+                IntStream
+                    .range(0, columnMaxWidth[x] - outputMatrix[x][y].length())
+                    .forEach(_i -> io.print(" "));
+                io.print(" |");
+            }
+            io.println();
+
+            if (y == 0) {
+                io.println(String.join("", Collections.nCopies(IntStream.of(columnMaxWidth).map(i -> i + 3).sum() + 1, "-")));
+            }
         }
     }
 
