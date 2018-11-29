@@ -167,7 +167,25 @@ public enum Command {
         HashMap<ReadingTipField<?>, String> tip = new HashMap<>();
 
         if (args.length > 1) {
-            interpreter.getIO().println("Tällaista hakua ei vielä tueta");
+            for (ReadingTipField<?> field : fields) {
+                tip.put(field, "");
+            }
+
+            for (int i = 1; i < args.length; i++) {
+                int sepIndex = args[i].indexOf('=');
+                if (sepIndex == -1) {
+                    interpreter.getIO().println("Argumentti `" + args[i] + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
+                    return;
+                }
+                String fieldName = args[i].substring(0, sepIndex);
+                String fieldValue = args[i].substring(sepIndex+1);
+                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
+                if (field == null) {
+                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
+                    return;
+                }
+                tip.put(field, fieldValue);
+            }
         } else if (args.length == 1) {
             for (ReadingTipField<?> field : fields) {
                 Optional<String> value = Optional.empty();
