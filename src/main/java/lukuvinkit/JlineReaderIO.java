@@ -1,12 +1,10 @@
 package lukuvinkit;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import org.jline.reader.*;
 import org.jline.reader.impl.LineReaderImpl;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jline.terminal.impl.AbstractTerminal;
 
 public class JlineReaderIO implements IO {
 
@@ -35,7 +33,20 @@ public class JlineReaderIO implements IO {
 
     @Override
     public String readLine() throws IOException {
-        return reader.readLine();
+        try {
+            return reader.readLine();
+        } catch (EndOfFileException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String readLine(String prompt) throws IOException {
+        try {
+            return reader.readLine(prompt);
+        } catch (EndOfFileException e) {
+            return null;
+        }
     }
 
     @Override

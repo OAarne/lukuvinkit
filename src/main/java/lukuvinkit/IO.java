@@ -12,6 +12,12 @@ public interface IO extends AutoCloseable {
 
     String readLine() throws IOException;
 
+    default String readLine(String prompt) throws IOException {
+        print(prompt);
+        flush();
+        return readLine();
+    }
+
     void flush();
 
     void close() throws IOException;

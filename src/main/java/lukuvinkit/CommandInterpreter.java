@@ -57,10 +57,8 @@ public class CommandInterpreter {
      * @return The inputted text, or {@code Optional.empty()} if the stream is closed.
      */
     public Optional<String> prompt(String prompt) {
-        io.print(prompt);
-        io.flush();
         try {
-            return Optional.ofNullable(io.readLine());
+            return Optional.ofNullable(io.readLine(prompt));
         } catch (IOException e) {
             io.println("Virhe syötteen luvussa!");
             return Optional.empty();
