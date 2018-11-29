@@ -16,6 +16,7 @@ public enum Command {
     MARK_READ("luettu", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
     REMOVE("poista", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
+    SHOW("näytä", "näyttää lukuvinkin tiedot", Command::showReadingTipImplementation),
     PRINT_JSON("jsoniksi", "tulostaa nykyiset vinkit JSON-muodossa", Command::printJSONImplementation);
 
     private String commandString;
@@ -116,7 +117,7 @@ public enum Command {
             columnMaxWidth[x] = field.getName().length();
             for (int y = 1; y <= entries.size(); y++) {
                 String value = entries.get(y-1).getValue().getFieldValueString(field);
-                if (value.length() > 20) {
+                if (value.length() > 40) {
                     value = value.substring(0, 40) + "...";
                 }
                 outputMatrix[x][y] = value;
@@ -168,6 +169,22 @@ public enum Command {
     }
 
     public static void removeReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+        int id = argsOrPromptId(interpreter, args);
+        if (id == -1) return;
+        interpreter.getStorage().removeReadingTipById(id);
+    }
+
+    public static void showReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
+        int id = argsOrPromptId(interpreter, args);
+        if (id == -1) return;
+        ReadingTip tip = interpreter.getStorage().getReadingTipById(id).get();
+        interpreter.getIO().println("Tunniste: " + id);
+        for (ReadingTipField<?> field : ReadingTipField.VALUES) {
+            interpreter.getIO().println(field.getName() + ": " + tip.getFieldValueString(field));
+        }
+    }
+
+    private static int argsOrPromptId(CommandInterpreter interpreter, String[] args) {
         int id;
         if (args.length == 1) {
             id = promptId(interpreter);
@@ -176,16 +193,16 @@ public enum Command {
                 id = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
                 interpreter.getIO().println("Annettu tunniste on virheellinen.");
-                return;
+                return -1;
             }
         } else {
             interpreter.getIO().println("Poista-komennolle annettiin väärä määrä argumentteja!");
-            return;
+            return -1;
         }
         if (!validateId(interpreter, id)) {
-            return;
+            return -1;
         }
-        interpreter.getStorage().removeReadingTipById(id);
+        return id;
     }
 
     private static int promptId(CommandInterpreter interpreter) {
