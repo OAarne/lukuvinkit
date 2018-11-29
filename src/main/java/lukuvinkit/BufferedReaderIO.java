@@ -38,7 +38,7 @@ public class BufferedReaderIO implements IO {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         reader.close();
     }
 

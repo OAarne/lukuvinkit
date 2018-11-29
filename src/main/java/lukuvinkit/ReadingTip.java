@@ -60,4 +60,9 @@ public class ReadingTip {
         ReadingTip that = (ReadingTip) o;
         return Objects.equals(fields, that.fields);
     }
+
+    @Override
+    public int hashCode() {
+        return fields.hashCode();
+    }
 }

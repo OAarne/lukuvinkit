@@ -29,6 +29,6 @@ public class BooleanFieldType implements FieldType<Boolean> {
 
     @Override
     public String fieldToString(Boolean obj) {
-        return ((Boolean) obj) ? trueString : falseString;
+        return obj ? trueString : falseString;
     }
 }

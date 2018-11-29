@@ -25,7 +25,7 @@ package lukuvinkit;
 
 public class Lukuvinkit {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         try (IO io = new BufferedReaderIO()) {
             Storage storage = FileSave.loadStorage("vinkit.json");
             CommandInterpreter interpreter = new CommandInterpreter(storage, io);
