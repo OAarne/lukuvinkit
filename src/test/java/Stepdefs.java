@@ -72,17 +72,6 @@ public class Stepdefs {
         inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
-    @Niin("^listalla ei ole yhtään vinkkiä$")
-    public void listallaEiOleYhtäänVinkkiä() throws Throwable {
-        inputLines.add("listaa");
-        inputLines.add("lopeta");
-        io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
-        app.mainLoop();
-        List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
-    }
-
     @Niin("ohjelma sulkeutuu")
     public void applicationIsClosed() throws Throwable {
         io = new StubIO(inputLines);
