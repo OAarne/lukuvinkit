@@ -114,7 +114,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.getFinnishTranslation())
         ));
     }
 
@@ -129,7 +129,7 @@ public class Stepdefs {
         List<String> output = io.getOutputs();
 
         assertTrue(output.stream().anyMatch(
-                s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.getFinnishTranslation())
         ));
     }
 
