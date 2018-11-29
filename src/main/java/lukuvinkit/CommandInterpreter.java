@@ -19,10 +19,16 @@ public class CommandInterpreter {
 
     private Storage storage;
     private IO io;
+    private Optional<String> saveFile;
 
-    public CommandInterpreter(Storage storage, IO io) {
+    public CommandInterpreter(Storage storage, IO io, Optional<String> saveFile) {
         this.storage = storage;
         this.io = io;
+        this.saveFile = saveFile;
+    }
+
+    public CommandInterpreter(IO io, String saveFile) throws IOException {
+        this(FileSave.loadStorage(saveFile), io, Optional.of(saveFile));
     }
 
     public Storage getStorage() {
@@ -88,6 +94,14 @@ public class CommandInterpreter {
                 Command cmdObj = COMMANDS.get(args.get(0));
                 if (cmdObj != null) {
                     cmdObj.getHandler().accept(this, args.toArray(new String[0]));
+                    if (saveFile.isPresent()) {
+                        try {
+                            FileSave.saveStorage(saveFile.get(), storage);
+                        } catch (IOException e) {
+                            io.println("Virhe tallennettaessa tiedostoon \"" + saveFile.get() + "\"!");
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     io.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
                 }
