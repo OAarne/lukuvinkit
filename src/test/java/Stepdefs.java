@@ -3,20 +3,19 @@ import cucumber.api.java.fi.Niin;
 import lukuvinkit.CommandInterpreter;
 import lukuvinkit.Storage;
 import lukuvinkit.StubIO;
+import lukuvinkit.TipType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
 
 public class Stepdefs {
     CommandInterpreter app;
     StubIO io;
     Storage storage = new Storage();
     List<String> inputLines = new ArrayList<>();
-
-//    @Given("^application is running$")
-//    public void application_is_running() throws Throwable { }
 
     @Kun("^komento \"([^\"]*)\" syötetään$")
     public void commandIsEntered(String command) {
@@ -29,12 +28,48 @@ public class Stepdefs {
         inputLines.add("poista 0");
     }
 
-    @Niin("ohjelma sulkeutuu")
-    public void applicationIsClosed() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
+    @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on lisätty$")
+    public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("vinkki Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+    }
+
+    @Kun("^käyttäjä on lisännyt kirjan otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void käyttäjäOnLisännytKirjanOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("kirja Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+    }
+
+    @Kun("^Ohjelma on käynnistetty uudelleen$")
+    public void ohjelmaOnKäynnistettyUudelleen() throws Throwable {
+        inputLines.add("lopeta");
         io = new StubIO(inputLines);
         app = new CommandInterpreter(storage, io);
         app.mainLoop();
+        inputLines = new ArrayList<>();
+    }
+
+    @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on poistettu$")
+    public void vinkkiOtsikollaJaKuvauksellaOnPoistettu(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+        inputLines = new ArrayList<>();
+
+        List<String> vastaavatVinkit = output.stream().filter(s -> s.contains(otsikko) && s.contains(kuvaus)).collect(Collectors.toList());
+        assertEquals(1, vastaavatVinkit.size());
+
+        String vinkki = vastaavatVinkit.get(0);
+        String[] vinkinOsat = vinkki.split(" ");
+        String id = vinkinOsat[0];
+
+        inputLines.add("poista " + id);
+    }
+
+    @Kun("^käyttäjä on lisännyt artikkelin otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void käyttäjäOnLisännytArtikkelinOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Niin("^listalla ei ole yhtään vinkkiä$")
@@ -45,28 +80,29 @@ public class Stepdefs {
         app = new CommandInterpreter(storage, io);
         app.mainLoop();
         List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size()-2).contains("Tunniste | Otsikko | "));
+        assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
     }
 
-    @Kun("^Vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\" on lisätty$")
-    public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        inputLines.add("vinkki Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
-    }
-
-    @Kun("^Ohjelma on käynnistetty uudelleen$")
-    public void ohjelmaOnKäynnistettyUudelleen() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        inputLines.add("lopeta");
+    @Niin("ohjelma sulkeutuu")
+    public void applicationIsClosed() throws Throwable {
         io = new StubIO(inputLines);
         app = new CommandInterpreter(storage, io);
         app.mainLoop();
-        inputLines = new ArrayList<>();
     }
 
     @Niin("^tulosteessa esiintyy vinkki otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
     public void tulosteessaEsiintyyVinkkiOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
+        esiintyyköTulosteessaVinkkiOtsikollaJaKuvauksella(otsikko, kuvaus, true);
+
+    }
+
+    @Niin("^tulosteessa ei esiinny vinkkiä otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void tulosteessaEiEsiinnyVinkkiäOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        esiintyyköTulosteessaVinkkiOtsikollaJaKuvauksella(otsikko, kuvaus, false);
+    }
+
+    @Niin("^listalla on artikkeli otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void listallaOnArtikkeliOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
         inputLines.add("listaa");
         inputLines.add("lopeta");
 
@@ -75,6 +111,41 @@ public class Stepdefs {
         app.mainLoop();
         List<String> output = io.getOutputs();
 
-        assertTrue(output.stream().anyMatch(s -> s.contains(otsikko) && s.contains(kuvaus)));
+        assertTrue(output.stream().anyMatch(
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.ARTICLE.toString())
+        ));
+    }
+
+    @Niin("^listalla on kirja otsikolla \"([^\"]*)\" ja kuvauksella \"([^\"]*)\"$")
+    public void listallaOnKirjaOtsikollaJaKuvauksella(String otsikko, String kuvaus) throws Throwable {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+
+        assertTrue(output.stream().anyMatch(
+            s -> s.contains(otsikko) && s.contains(kuvaus) && s.contains(TipType.BOOK.toString())
+        ));
+    }
+
+    // apumetodit
+
+    public void esiintyyköTulosteessaVinkkiOtsikollaJaKuvauksella(String otsikko, String kuvaus, boolean esiintyy) {
+        inputLines.add("listaa");
+        inputLines.add("lopeta");
+
+        io = new StubIO(inputLines);
+        app = new CommandInterpreter(storage, io);
+        app.mainLoop();
+        List<String> output = io.getOutputs();
+
+        if (esiintyy) {
+            assertTrue(output.stream().anyMatch(s -> s.contains(otsikko) && s.contains(kuvaus)));
+        } else {
+            assertFalse(output.stream().anyMatch(s -> s.contains(otsikko) && s.contains(kuvaus)));
+        }
     }
 }

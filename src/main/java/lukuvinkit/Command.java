@@ -1,7 +1,11 @@
 package lukuvinkit;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 public enum Command {
 
@@ -51,7 +55,7 @@ public enum Command {
             .filter(field -> field.getAssociatedTipTypes().contains(tipType))
             .toArray(ReadingTipField[]::new);
         ReadingTip tip = new ReadingTip();
-        tip.setFieldValueString(ReadingTipField.TYPE, tipType.toString());
+        tip.setFieldValue(ReadingTipField.TYPE, tipType);
 
         if (args.length > 1) {
             for (int i = 1; i < args.length; i++) {
@@ -98,19 +102,48 @@ public enum Command {
     }
 
     public static void listReadingTipsImplementation(CommandInterpreter interpreter, String[] args) {
-        interpreter.getIO().print("Tunniste");
-        for (ReadingTipField<?> field : ReadingTipField.VALUES) {
-            interpreter.getIO().print(" | " + field.getName());
-        }
-        interpreter.getIO().println();
-        interpreter.getStorage().getReadingTips().forEach(entry -> {
-            interpreter.getIO().print(entry.getKey());
-            ReadingTip tip = entry.getValue();
-            for (ReadingTipField<?> field : ReadingTipField.VALUES) {
-                interpreter.getIO().print(" | " + tip.getFieldValueString(field));
+        List<Map.Entry<Integer, ReadingTip>> entries = interpreter.getStorage().getReadingTips();
+        List<ReadingTipField<?>> fields = ReadingTipField.VALUES;
+
+        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][entries.size() + 1];
+        int[] columnMaxWidth = new int[ReadingTipField.VALUES.size() + 1];
+
+        outputMatrix[0][0] = "Tunniste";
+        columnMaxWidth[0] = 8;
+        for (int x = 1; x <= fields.size(); x++) {
+            ReadingTipField<?> field = fields.get(x - 1);
+            outputMatrix[x][0] = field.getName();
+            columnMaxWidth[x] = field.getName().length();
+            for (int y = 1; y <= entries.size(); y++) {
+                String value = entries.get(y-1).getValue().getFieldValueString(field);
+                if (value.length() > 20) {
+                    value = value.substring(0, 40) + "...";
+                }
+                outputMatrix[x][y] = value;
+                if (value.length() > columnMaxWidth[x]) columnMaxWidth[x] = value.length();
             }
-            interpreter.getIO().println();
-        });
+        }
+        IntStream
+            .rangeClosed(1, entries.size())
+            .forEachOrdered(y -> outputMatrix[0][y] = entries.get(y-1).getKey().toString());
+        
+        IO io = interpreter.getIO();
+        for (int y = 0; y <= entries.size(); y++) {
+            io.print("|");
+            for (int x = 0; x <= fields.size(); x++) {
+                io.print(" ");
+                io.print(outputMatrix[x][y]);
+                IntStream
+                    .range(0, columnMaxWidth[x] - outputMatrix[x][y].length())
+                    .forEach(_i -> io.print(" "));
+                io.print(" |");
+            }
+            io.println();
+
+            if (y == 0) {
+                io.println(String.join("", Collections.nCopies(IntStream.of(columnMaxWidth).map(i -> i + 3).sum() + 1, "-")));
+            }
+        }
     }
 
     public static void markReadImplementation(CommandInterpreter interpreter, String[] args) {
