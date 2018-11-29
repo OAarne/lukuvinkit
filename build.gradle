@@ -20,8 +20,8 @@ dependencies {
 }
 
 tasks.withType(JavaCompile) {
-//    options.compilerArgs += '-Xlint:all'
-//    options.compilerArgs += '-Werror'
+    options.compilerArgs += '-Xlint:all'
+    options.compilerArgs += '-Werror'
 }
 
 mainClassName = 'lukuvinkit.Lukuvinkit'

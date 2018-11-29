@@ -31,10 +31,11 @@ public class ReadingTip {
         fields.put(field, value);
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         for (Map.Entry<ReadingTipField<? extends Object>, Object> entry : fields.entrySet()) {
+            @SuppressWarnings("rawtypes")
             ReadingTipField key = entry.getKey();
             Object value = entry.getValue();
             obj.put(key.getName(), key.getType().fieldToString(value));
@@ -42,10 +43,10 @@ public class ReadingTip {
         return obj;
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public static ReadingTip fromJSONObject(JSONObject obj) {
         ReadingTip tip = new ReadingTip();
-        for (ReadingTipField field : ReadingTipField.VALUES) {
+        for (@SuppressWarnings("rawtypes") ReadingTipField field : ReadingTipField.VALUES) {
             if (obj.has(field.getName())) {
                 tip.setFieldValue(field, field.getType().stringToField(obj.getString(field.getName())));
             }
