@@ -7,6 +7,7 @@ import lukuvinkit.TipType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -42,7 +43,7 @@ public class Stepdefs {
     public void ohjelmaOnKäynnistettyUudelleen() throws Throwable {
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         inputLines = new ArrayList<>();
     }
@@ -52,7 +53,7 @@ public class Stepdefs {
         inputLines.add("listaa");
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
         inputLines = new ArrayList<>();
@@ -77,7 +78,7 @@ public class Stepdefs {
         inputLines.add("listaa");
         inputLines.add("lopeta");
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
         assertTrue(output.get(output.size()-3).contains("Tunniste | Otsikko | "));
@@ -86,7 +87,7 @@ public class Stepdefs {
     @Niin("ohjelma sulkeutuu")
     public void applicationIsClosed() throws Throwable {
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
     }
 
@@ -107,7 +108,7 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 
@@ -122,7 +123,7 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 
@@ -138,7 +139,7 @@ public class Stepdefs {
         inputLines.add("lopeta");
 
         io = new StubIO(inputLines);
-        app = new CommandInterpreter(storage, io);
+        app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
 
