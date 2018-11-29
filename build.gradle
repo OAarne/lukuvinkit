@@ -19,6 +19,11 @@ dependencies {
     testCompile 'io.cucumber:cucumber-junit:4.2.0'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '-Xlint:all'
+    options.compilerArgs += '-Werror'
+}
+
 mainClassName = 'lukuvinkit.Lukuvinkit'
 jar {
     manifest {
