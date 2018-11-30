@@ -1,19 +1,14 @@
 package lukuvinkit;
 
+import lukuvinkit.fields.BooleanFieldType;
 import lukuvinkit.fields.EnumFieldType;
 import lukuvinkit.fields.FieldType;
 import lukuvinkit.fields.ValidatedStringFieldType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static lukuvinkit.TipType.BOOK;
 import static lukuvinkit.TipType.OTHER;
-import lukuvinkit.fields.BooleanFieldType;
 import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
 public class ReadingTipField<T> implements Translated {
@@ -24,12 +19,14 @@ public class ReadingTipField<T> implements Translated {
         new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(".*\\S.*"), Arrays.asList(TipType.values()), "Nimetön vinkki");
     public static final ReadingTipField<TipType> TYPE =
         new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), Collections.emptyList(), TipType.OTHER);
+    public static final ReadingTipField<String> AUTHORS =
+        new ReadingTipField<>("Kirjoittajat", STRING_TYPE, Arrays.asList(TipType.values()), "");
     public static final ReadingTipField<String> DESCRIPTION =
         new ReadingTipField<>("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values()), "");
     public static final ReadingTipField<String> ISBN =
         new ReadingTipField<>("ISBN", STRING_TYPE, Arrays.asList(BOOK, OTHER), "");
-    public static final ReadingTipField<Boolean> IS_READ
-        = new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), Collections.emptyList(), false);
+    public static final ReadingTipField<Boolean> IS_READ =
+        new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), Collections.emptyList(), false);
 
     private String name;
     private List<TipType> associatedTipTypes;
