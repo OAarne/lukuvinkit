@@ -29,3 +29,8 @@ Ominaisuus: Storage-luokka toimii
         Kun varastoon on lisätty vinkki otsikolla "Kissa"
         Ja luodaan varasto jsonmuotoisesta vinkistä "Kissa"
         Niin varastojen sisällöt ovat samat
+
+    Tapaus:
+        Oletetaan että varasto on vasta luotu
+        Kun varastoon on lisätty vinkki otsikolla "Kissa" indeksillä 1
+        Niin varastossa on "Kissa" indeksillä 1

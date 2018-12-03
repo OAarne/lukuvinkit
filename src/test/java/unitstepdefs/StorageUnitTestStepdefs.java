@@ -37,6 +37,11 @@ public class StorageUnitTestStepdefs {
         jsonstorage = Storage.fromJSON("{\"0\":{\"Otsikko\":\"Kissa\"}}");
     }
 
+    @Kun("^luodaan varasto jsonmuotoisesta vinkistä \"Kissa\" indeksillä 1$")
+    public void luodaanVarastoJsonMuotoisestaVinkistä2() throws Throwable {
+        jsonstorage = Storage.fromJSON("{\"1\":{\"Otsikko\":\"Kissa\"}}");
+    }
+
     @Niin("varaston palauttamalla tunnisteella haetun vinkin otsikko on {string}")
     public void varaston_palauttamalla_tunnisteella_haetun_vinkin_otsikko_on(String title) {
         Optional<ReadingTip> tip = storage.getReadingTipById(previousId);
@@ -66,6 +71,11 @@ public class StorageUnitTestStepdefs {
         Optional<ReadingTip> tip2 = jsonstorage.getReadingTipById(0);
 
         assertEquals(tip1, tip2);
+    }
+
+    @Niin("^varastossa on \"Kissa\" indeksillä 1$")
+    public void varastossaOnKissaIndeksillä1() throws Throwable {
+        assertEquals("{\"1\":{\"Otsikko\":\"Kissa\"}}", storage.toJSON());
     }
 
 }
