@@ -1,4 +1,4 @@
-package lukuvinkit;
+package lukuvinkit.ui;
 
 import java.io.IOException;
 import java.util.Arrays;

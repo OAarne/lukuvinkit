@@ -1,8 +1,11 @@
-package lukuvinkit;
+package lukuvinkit.ui;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
+import lukuvinkit.ReadingTip;
+import lukuvinkit.ReadingTipField;
+import lukuvinkit.TipType;
 
 import static java.util.stream.Collectors.toSet;
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lukuvinkit.CommandInterpreter;
+import lukuvinkit.ui.CommandInterpreter;
 import lukuvinkit.Storage;
 import lukuvinkit.StubIO;
 import lukuvinkit.TipType;

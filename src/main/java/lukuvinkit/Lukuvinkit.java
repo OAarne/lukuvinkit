@@ -23,6 +23,10 @@
  */
 package lukuvinkit;
 
+import lukuvinkit.ui.IO;
+import lukuvinkit.ui.CommandInterpreter;
+import lukuvinkit.ui.JlineReaderIO;
+
 public class Lukuvinkit {
 
     public static void main(String[] args) throws InterruptedException {
