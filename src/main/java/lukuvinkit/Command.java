@@ -4,12 +4,14 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
 public enum Command {
 
     HELP("ohje", "Ohjekomennot", "tulostaa ohjeen", Command::printHelpImplementation),
-    CREATE("vinkki", "Luomiskomennot", "lisää uuden muu-tyyppisen lukuvinkin", Command::addReadingTipImplementation),
+    CREATE("luo", "Luomiskomennot", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
+    CREATE_OTHER("vinkki", "Luomiskomennot", "lisää uuden muu-tyyppisen lukuvinkin", Command::addOtherImplementation),
     CREATE_BOOK("kirja", "Luomiskomennot", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
     CREATE_ARTICLE("artikkeli", "Luomiskomennot", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
     MARK_READ("luettu", "Muokkauskomennot", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
@@ -47,66 +49,25 @@ public enum Command {
     }
 
     public static void addReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
-        addReadingTipOfGivenType(interpreter, args, TipType.OTHER);
+        addReadingTipOfGivenType(interpreter, args, Optional.empty());
+    }
+
+    public static void addOtherImplementation(CommandInterpreter interpreter, String[] args) {
+        addReadingTipOfGivenType(interpreter, args, Optional.of(TipType.OTHER));
     }
 
     private static void addBookImplementation(CommandInterpreter interpreter, String[] args) {
-        addReadingTipOfGivenType(interpreter, args, TipType.BOOK);
+        addReadingTipOfGivenType(interpreter, args, Optional.of(TipType.BOOK));
     }
 
     private static void addArticleImplementation(CommandInterpreter interpreter, String[] args) {
-        addReadingTipOfGivenType(interpreter, args, TipType.ARTICLE);
+        addReadingTipOfGivenType(interpreter, args, Optional.of(TipType.ARTICLE));
     }
 
-    private static void addReadingTipOfGivenType(CommandInterpreter interpreter, String[] args, TipType tipType) {
-        ReadingTipField<?>[] fields =
-            ReadingTipField.VALUES.stream()
-            .filter(field -> field.getAssociatedTipTypes().contains(tipType))
-            .toArray(ReadingTipField[]::new);
-        ReadingTip tip = new ReadingTip();
-        tip.setFieldValue(ReadingTipField.TYPE, tipType);
-
-        if (args.length > 1) {
-            for (int i = 1; i < args.length; i++) {
-                int sepIndex = args[i].indexOf('=');
-                if (sepIndex == -1) {
-                    interpreter.getIO().println("Argumentti `" + args[i] + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
-                    return;
-                }
-                String fieldName = args[i].substring(0, sepIndex);
-                String fieldValue = args[i].substring(sepIndex+1);
-                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
-                if (field == null) {
-                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
-                    return;
-                }
-                if (!field.getType().validateString(fieldValue)) {
-                    interpreter.getIO().println("Kentän `" + fieldName + "' arvo `" + fieldValue + "' ei ole kelvollinen.");
-                    return;
-                }
-                tip.setFieldValueString(field, fieldValue);
-            }
-        } else if (args.length == 1) {
-            for (ReadingTipField<?> field : fields) {
-                Optional<String> value = Optional.empty();
-                do {
-                    if (value.isPresent()) {
-                        interpreter.getIO().println("Kentän `" + field.getName() + "' arvo ei ole kelvollinen.");
-                    }
-                    value = interpreter.prompt(field.getName() + "> ");
-                } while (value.isPresent() && !field.getType().validateString(value.get()));
-                if (value.isPresent()) {
-                    tip.setFieldValueString(field, value.get());
-                } else {
-                    interpreter.getIO().println("Kentän `" + field.getName() + "' arvoa ei annettu. Lopetetaan lisääminen.");
-                    return;
-                }
-            }
-        } else {
-            interpreter.getIO().println("Lisää-komennolle annettiin väärä määrä argumentteja!");
-            return;
-        }
-        int id = interpreter.getStorage().addReadingTip(tip);
+    private static void addReadingTipOfGivenType(CommandInterpreter interpreter, String[] args, Optional<TipType> tipType) {
+        Optional<ReadingTip> tip = readReadingTip(interpreter, args, tipType, true);
+        if (!tip.isPresent()) return;
+        int id = interpreter.getStorage().addReadingTip(tip.get());
         interpreter.getIO().println("Lisättiin vinkki tunnisteella " + id + ".");
     }
 
@@ -173,47 +134,20 @@ public enum Command {
     }
 
     private static void searchReadingTipImplementation(CommandInterpreter interpreter, String[] args) {
-        ReadingTipField<?>[] fields = ReadingTipField.VALUES.stream().toArray(ReadingTipField[]::new);
-        HashMap<ReadingTipField<?>, String> tip = new HashMap<>();
+        Optional<ReadingTip> tip = readReadingTip(interpreter, args, Optional.empty(), false);
+        if (!tip.isPresent()) return;
+        TipType tipType = tip.get().getFieldValue(ReadingTipField.TYPE);
 
-        if (args.length > 1) {
-            for (ReadingTipField<?> field : fields) {
-                tip.put(field, "");
-            }
-
-            for (int i = 1; i < args.length; i++) {
-                int sepIndex = args[i].indexOf('=');
-                if (sepIndex == -1) {
-                    interpreter.getIO().println("Argumentti `" + args[i] + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
-                    return;
-                }
-                String fieldName = args[i].substring(0, sepIndex);
-                String fieldValue = args[i].substring(sepIndex+1);
-                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
-                if (field == null) {
-                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
-                    return;
-                }
-                tip.put(field, fieldValue);
-            }
-        } else if (args.length == 1) {
-            for (ReadingTipField<?> field : fields) {
-                Optional<String> value = Optional.empty();
-                value = interpreter.prompt(field.getName() + "> ");
-                tip.put(field, value.get());
-            }
-        } else {
-            interpreter.getIO().println("Komennolle annettiin väärä määrä argumentteja!");
-            return;
-        }
         List<Map.Entry<Integer, ReadingTip>> searchSpace = interpreter.getStorage().getReadingTips();
         ArrayList<Map.Entry<Integer, ReadingTip>> results = new ArrayList<>();
 
         for (Map.Entry<Integer, ReadingTip> entry : searchSpace) {
+            TipType entryType = entry.getValue().getFieldValue(ReadingTipField.TYPE);
+            if (tipType != TipType.OTHER && entryType != tipType) continue; // FIXME
             boolean match = true;
-            for (ReadingTipField<?> field : fields) {
+            for (ReadingTipField<?> field : tip.get().getPresentFields()) {
                 String entryField = entry.getValue().getFieldValueString(field);
-                String tipField = tip.get(field);
+                String tipField = tip.get().getFieldValueString(field);
                 String[] terms = tipField.split(" ");
                 if (!Arrays.stream(terms).anyMatch(s -> entryField.contains(s))) {
                     match = false;
@@ -224,6 +158,79 @@ public enum Command {
         }
 
         printTipList(interpreter, results);
+    }
+
+    private static Optional<ReadingTip> readReadingTip(CommandInterpreter interpreter, String[] argsArray, Optional<TipType> tipType, boolean validate) {
+
+        List<String> args = new ArrayList<>(Arrays.asList(argsArray));
+        args.remove(0); // poistetaan komennon nimi
+
+        if (!tipType.isPresent() && args.size() >= 1 && args.get(0).indexOf("=") == -1) {
+            String typeName = args.remove(0);
+            TipType type = TipType.TIP_TYPES.get(typeName); // voi olla null
+            if (type != null) {
+                tipType = Optional.of(type);
+            } else {
+                interpreter.getIO().println(
+                    "Argumentti `"
+                    + typeName
+                    + "' ei ole kelvollinen vinkkityyppi (joita ovat: "
+                    + Arrays.asList(TipType.values()).stream().map(TipType::getName).collect(joining(", "))
+                    + ").");
+                return Optional.empty();
+            }
+        }
+
+        final TipType finalTipType = tipType.orElse(TipType.OTHER);
+        ReadingTipField<?>[] fields =
+            ReadingTipField.VALUES.stream()
+            .filter(field -> field.getAssociatedTipTypes().contains(finalTipType))
+            .toArray(ReadingTipField[]::new);
+        ReadingTip tip = new ReadingTip();
+        tip.setFieldValue(ReadingTipField.TYPE, finalTipType);
+
+        if (args.size() > 1) {
+            for (int i = 0; i < args.size(); i++) {
+                String arg = args.get(i);
+                int sepIndex = arg.indexOf('=');
+                if (sepIndex == -1) {
+                    interpreter.getIO().println("Argumentti `" + arg + "' ei ole kelvollinen (pitää olla muotoa `Kenttä=arvo').");
+                    return Optional.empty();
+                }
+                String fieldName = arg.substring(0, sepIndex);
+                String fieldValue = arg.substring(sepIndex+1);
+                ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
+                if (field == null) {
+                    interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
+                    return Optional.empty();
+                }
+                if (validate && !field.getType().validateString(fieldValue)) {
+                    interpreter.getIO().println("Kentän `" + fieldName + "' arvo `" + fieldValue + "' ei ole kelvollinen.");
+                    return Optional.empty();
+                }
+                tip.setFieldValueString(field, fieldValue);
+            }
+        } else if (args.size() == 0) {
+            for (ReadingTipField<?> field : fields) {
+                Optional<String> value = Optional.empty();
+                do {
+                    if (value.isPresent()) {
+                        interpreter.getIO().println("Kentän `" + field.getName() + "' arvo ei ole kelvollinen.");
+                    }
+                    value = interpreter.prompt(field.getName() + "> ");
+                } while (value.isPresent() && validate && !field.getType().validateString(value.get()));
+                if (value.isPresent()) {
+                    tip.setFieldValueString(field, value.get());
+                } else {
+                    interpreter.getIO().println("Kentän `" + field.getName() + "' arvoa ei annettu. Lopetetaan lisääminen.");
+                    return Optional.empty();
+                }
+            }
+        } else {
+            interpreter.getIO().println("Komennolle annettiin väärä määrä argumentteja!");
+            return Optional.empty();
+        }
+        return Optional.of(tip);
     }
 
     private static int promptId(CommandInterpreter interpreter) {

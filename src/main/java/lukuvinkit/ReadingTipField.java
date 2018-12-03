@@ -16,24 +16,24 @@ public class ReadingTipField<T> implements Translated {
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
     public static final ReadingTipField<String> TITLE =
-        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(".*\\S.*"), Arrays.asList(TipType.values()), "Nimetön vinkki");
+        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(".*\\S.*"), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
     public static final ReadingTipField<TipType> TYPE =
-        new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), Collections.emptyList(), TipType.OTHER);
+        new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), true, Collections.emptyList(), TipType.OTHER);
     public static final ReadingTipField<String> AUTHORS =
-        new ReadingTipField<>("Kirjoittajat", STRING_TYPE, Arrays.asList(TipType.values()), "");
+        new ReadingTipField<>("Kirjoittajat", STRING_TYPE, true, Arrays.asList(TipType.values()), "");
     public static final ReadingTipField<String> DESCRIPTION =
-        new ReadingTipField<>("Kuvaus", STRING_TYPE, Arrays.asList(TipType.values()), "");
+        new ReadingTipField<>("Kuvaus", STRING_TYPE, true, Arrays.asList(TipType.values()), "");
     public static final ReadingTipField<String> ISBN =
-        new ReadingTipField<>("ISBN", STRING_TYPE, Arrays.asList(BOOK, OTHER), "");
+        new ReadingTipField<>("ISBN", STRING_TYPE, false, Arrays.asList(BOOK, OTHER), "");
     public static final ReadingTipField<Boolean> IS_READ =
-        new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), Collections.emptyList(), false);
+        new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), true, Collections.emptyList(), false);
 
     private String name;
     private List<TipType> associatedTipTypes;
     private FieldType<T> type;
     private T defaultValue;
 
-    private ReadingTipField(String name, FieldType<T> type, List<TipType> associatedTipTypes, T defaultValue) {
+    private ReadingTipField(String name, FieldType<T> type, boolean visibleDuringListing, List<TipType> associatedTipTypes, T defaultValue) {
         this.name = name;
         this.type = type;
         this.associatedTipTypes = associatedTipTypes;
