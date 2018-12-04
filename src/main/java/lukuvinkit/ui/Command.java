@@ -266,7 +266,7 @@ public enum Command {
         int numFields = fields.size() + 1;
 
         int terminalWidth = interpreter.getIO().getTerminalWidth() - 2;
-        int maxWidth = terminalWidth == 0 ? 40 : terminalWidth / numFields - 2;
+        int maxWidth = terminalWidth <= 0 ? 40 : terminalWidth / numFields - 2;
 
         String[][] outputMatrix = new String[numFields][tips.size() + 1];
         int[] columnMaxWidth = new int[numFields];

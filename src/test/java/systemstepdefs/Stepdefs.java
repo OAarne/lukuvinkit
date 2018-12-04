@@ -82,7 +82,7 @@ public class Stepdefs {
         app = new CommandInterpreter(storage, io, Optional.empty());
         app.mainLoop();
         List<String> output = io.getOutputs();
-        assertTrue(output.get(output.size() - 3).contains("Tunniste | Otsikko | "));
+        assertTrue(output.get(output.size() - 4).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
