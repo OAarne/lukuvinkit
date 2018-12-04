@@ -21,4 +21,11 @@ public interface IO extends AutoCloseable {
     void flush();
 
     void close() throws IOException;
+
+    /**
+     * @return 0 if not known, width in characters otherwise
+     */
+    default int getTerminalWidth() {
+        return 0;
+    }
 }
