@@ -22,10 +22,9 @@ public class Stepdefs {
     Storage storage = new Storage();
     List<String> inputLines = new ArrayList<>();
 
-    @Oletetaan("on lisätty vinkit parametrein {string} ja {string}")
-    public void onLisättyVinkitParametreinJa(String pars1, String pars2) {
-        inputLines.add("luo " + pars1);
-        inputLines.add("luo " + pars2);
+    @Oletetaan("on lisätty vinkki otsikolla {string} ja kirjoittajalla {string} ja sen on {string}")
+    public void onLisättyVinkitParametreinJa(String otsikko, String kirjoittajat, String lukemattomuus) {
+        inputLines.add("luo Otsikko=\"" + otsikko + "\" Kirjoittajat=\"" + kirjoittajat + "\" Luettu=\"" + lukemattomuus + "\"");
     }
 
     @Kun("komento {string} syötetään")
@@ -79,9 +78,19 @@ public class Stepdefs {
         inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
-    @Kun("lukija on tehnyt haun parametreilla {string}")
-    public void lukijaOnTehnytHaunParametreilla(String pars) {
-        inputLines.add("hae " + pars);
+    @Kun("käyttäjä on hakenut kaikki vinkit otsikolla {string}")
+    public void käyttäjäOnHakenutVinkitOtsikolla(String otsikko) {
+        inputLines.add("hae Otsikko=\"" + otsikko + "\"");
+    }
+
+    @Kun("käyttäjä on hakenut kaikki vinkit joilla on kirjoittaja {string}")
+    public void käyttäjäOnHakenutVinkitKirjoittajalla(String kirjoittajat) {
+        inputLines.add("hae Kirjoittajat=\"" + kirjoittajat + "\"");
+    }
+
+    @Kun("käyttäjä hakee kaikki lukemattomat vinkit")
+    public void käyttäjäOnHakenutLukemattomatVinkit() {
+        inputLines.add("hae Luettu=\"lukematta\"");
     }
 
     @Niin("listalla ei ole yhtään vinkkiä")
