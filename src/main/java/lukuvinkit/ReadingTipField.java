@@ -13,6 +13,7 @@ import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
 public class ReadingTipField<T> implements Translated {
     public static final List<ReadingTipField<? extends Object>> VALUES = new ArrayList<>();
+    public static final List<ReadingTipField<? extends Object>> VISIBLE_VALUES = new ArrayList<>();
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
     public static final ReadingTipField<String> TITLE =
@@ -39,6 +40,7 @@ public class ReadingTipField<T> implements Translated {
         this.associatedTipTypes = associatedTipTypes;
         this.defaultValue = defaultValue;
         VALUES.add(this);
+        if (visibleDuringListing) VISIBLE_VALUES.add(this);
         VALUE_MAP.put(name, this);
     }
 

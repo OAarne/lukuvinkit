@@ -262,10 +262,14 @@ public enum Command {
     }
 
     private static void printTipList(CommandInterpreter interpreter, List<Map.Entry<Integer, ReadingTip>> tips) {
-        List<ReadingTipField<?>> fields = ReadingTipField.VALUES;
+        List<ReadingTipField<?>> fields = ReadingTipField.VISIBLE_VALUES;
+        int numFields = fields.size() + 1;
 
-        String[][] outputMatrix = new String[ReadingTipField.VALUES.size() + 1][tips.size() + 1];
-        int[] columnMaxWidth = new int[ReadingTipField.VALUES.size() + 1];
+        int terminalWidth = interpreter.getIO().getTerminalWidth() - 2;
+        int maxWidth = terminalWidth <= 0 ? 40 : terminalWidth / numFields - 2;
+
+        String[][] outputMatrix = new String[numFields][tips.size() + 1];
+        int[] columnMaxWidth = new int[numFields];
 
         outputMatrix[0][0] = "Tunniste";
         columnMaxWidth[0] = 8;
@@ -275,8 +279,8 @@ public enum Command {
             columnMaxWidth[x] = field.getName().length();
             for (int y = 1; y <= tips.size(); y++) {
                 String value = tips.get(y-1).getValue().getFieldValueString(field);
-                if (value.length() > 40) {
-                    value = value.substring(0, 40) + "...";
+                if (value.length() > maxWidth) {
+                    value = value.substring(0, maxWidth-3) + "...";
                 }
                 outputMatrix[x][y] = value;
                 if (value.length() > columnMaxWidth[x]) columnMaxWidth[x] = value.length();
@@ -287,6 +291,7 @@ public enum Command {
             .forEachOrdered(y -> outputMatrix[0][y] = tips.get(y-1).getKey().toString());
 
         IO io = interpreter.getIO();
+        io.println();
         for (int y = 0; y <= tips.size(); y++) {
             io.print("|");
             for (int x = 0; x <= fields.size(); x++) {
@@ -303,6 +308,7 @@ public enum Command {
                 io.println(String.join("", Collections.nCopies(IntStream.of(columnMaxWidth).map(i -> i + 3).sum() + 1, "-")));
             }
         }
+        io.println();
     }
 
     public static void printJSONImplementation(CommandInterpreter interpreter, String[] args) {

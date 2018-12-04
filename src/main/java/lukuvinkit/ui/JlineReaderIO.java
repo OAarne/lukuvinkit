@@ -69,4 +69,8 @@ public class JlineReaderIO implements IO {
         terminal.close();
     }
 
+    @Override
+    public int getTerminalWidth() {
+        return terminal.getWidth();
+    }
 }

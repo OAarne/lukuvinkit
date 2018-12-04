@@ -88,7 +88,7 @@ public class Stepdefs {
     public void listallaEiOleYhtäänVinkkiä() {
         inputLines.add("listaa");
         List<String> output = aja();
-        assertTrue(output.get(output.size() - 3).contains("Tunniste | Otsikko | "));
+        assertTrue(output.get(output.size() - 4).contains("Tunniste | Otsikko | "));
     }
 
     @Niin("ohjelma sulkeutuu")
