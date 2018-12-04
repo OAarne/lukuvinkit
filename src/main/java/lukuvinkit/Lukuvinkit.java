@@ -23,14 +23,16 @@
  */
 package lukuvinkit;
 
+import lukuvinkit.ui.IO;
+import lukuvinkit.ui.CommandInterpreter;
+import lukuvinkit.ui.JlineReaderIO;
+
 public class Lukuvinkit {
 
-    public static void main(String[] args) {
-        try (IO io = new BufferedReaderIO()) {
-            Storage storage = FileSave.loadStorage("vinkit.json");
-            CommandInterpreter interpreter = new CommandInterpreter(storage, io);
+    public static void main(String[] args) throws InterruptedException {
+        try (IO io = new JlineReaderIO()) {
+            CommandInterpreter interpreter = new CommandInterpreter(io, "vinkit.json");
             interpreter.mainLoop();
-            FileSave.saveStorage("vinkit.json", storage);
         } catch (Exception e) {
             System.err.println("Virhe poistuttaessa ohjelmasta.");
             e.printStackTrace();

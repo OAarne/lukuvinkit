@@ -20,6 +20,6 @@ public class FileSave {
     public static void saveStorage(String filename, Storage storage) throws IOException {
         Path path = Paths.get(filename);
         String json = storage.toJSON();
-        Files.write(path, json.getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+        Files.write(path, json.getBytes(Charset.forName("utf-8")), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

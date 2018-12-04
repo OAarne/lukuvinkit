@@ -1,4 +1,4 @@
-package lukuvinkit;
+package lukuvinkit.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class BufferedReaderIO implements IO {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         reader.close();
     }
 

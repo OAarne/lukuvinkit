@@ -7,7 +7,7 @@ Ominaisuus: Käyttäjä voi lisätä, poistaa ja listata vinkkejä
 
     Tapaus: Käyttäjä voi lisätä artikkelin
         Kun käyttäjä on lisännyt artikkelin otsikolla "Artikkelimme" ja kuvauksella "Hyvin pitkä"
-        Niin listalla on artikkeli otsikolla "Artikkeli" ja kuvauksella "Hyvin pitkä"
+        Niin listalla on artikkeli otsikolla "Artikkelimme" ja kuvauksella "Hyvin pitkä"
 
     Tapaus: Käyttäjä voi lisätä kirjan
         Kun käyttäjä on lisännyt kirjan otsikolla "Kirjamme" ja kuvauksella "Hyvin lyhyt"

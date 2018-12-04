@@ -1,15 +1,16 @@
+package unitstepdefs;
+
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
 import cucumber.api.java.fi.Oletetaan;
-import static org.junit.Assert.*;
-
 import java.util.Optional;
-
-import lukuvinkit.Storage;
 import lukuvinkit.ReadingTip;
 import static lukuvinkit.ReadingTipField.*;
+import lukuvinkit.Storage;
+import static org.junit.Assert.*;
 
 public class StorageUnitTestStepdefs {
+
     private Storage storage;
     private Storage jsonstorage;
     private int previousId;
@@ -33,7 +34,12 @@ public class StorageUnitTestStepdefs {
 
     @Kun("^luodaan varasto jsonmuotoisesta vinkistä \"Kissa\"$")
     public void luodaanVarastoJsonMuotoisestaVinkistä() throws Throwable {
-        jsonstorage = storage.fromJSON("{\"0\":{\"Otsikko\":\"Kissa\"}}");
+        jsonstorage = Storage.fromJSON("{\"0\":{\"Otsikko\":\"Kissa\"}}");
+    }
+
+    @Kun("^luodaan varasto jsonmuotoisesta vinkistä \"Kissa\" indeksillä 1$")
+    public void luodaanVarastoJsonMuotoisestaVinkistä2() throws Throwable {
+        jsonstorage = Storage.fromJSON("{\"1\":{\"Otsikko\":\"Kissa\"}}");
     }
 
     @Niin("varaston palauttamalla tunnisteella haetun vinkin otsikko on {string}")
@@ -61,10 +67,15 @@ public class StorageUnitTestStepdefs {
 
     @Niin("^varastojen sisällöt ovat samat$")
     public void varastojenSisällötOvatSamat() throws Throwable {
-        Optional tip1 = storage.getReadingTipById(0);
-        Optional tip2 = jsonstorage.getReadingTipById(0);
+        Optional<ReadingTip> tip1 = storage.getReadingTipById(0);
+        Optional<ReadingTip> tip2 = jsonstorage.getReadingTipById(0);
 
         assertEquals(tip1, tip2);
+    }
+
+    @Niin("^varastossa on \"Kissa\" indeksillä 1$")
+    public void varastossaOnKissaIndeksillä1() throws Throwable {
+        assertEquals("{\"1\":{\"Otsikko\":\"Kissa\"}}", storage.toJSON());
     }
 
 }

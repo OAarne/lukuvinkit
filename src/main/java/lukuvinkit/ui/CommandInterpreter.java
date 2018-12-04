@@ -1,4 +1,4 @@
-package lukuvinkit;
+package lukuvinkit.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lukuvinkit.FileSave;
+import lukuvinkit.Storage;
 
 public class CommandInterpreter {
 
@@ -19,10 +21,16 @@ public class CommandInterpreter {
 
     private Storage storage;
     private IO io;
+    private Optional<String> saveFile;
 
-    public CommandInterpreter(Storage storage, IO io) {
+    public CommandInterpreter(Storage storage, IO io, Optional<String> saveFile) {
         this.storage = storage;
         this.io = io;
+        this.saveFile = saveFile;
+    }
+
+    public CommandInterpreter(IO io, String saveFile) throws IOException {
+        this(FileSave.loadStorage(saveFile), io, Optional.of(saveFile));
     }
 
     public Storage getStorage() {
@@ -51,10 +59,8 @@ public class CommandInterpreter {
      * @return The inputted text, or {@code Optional.empty()} if the stream is closed.
      */
     public Optional<String> prompt(String prompt) {
-        io.print(prompt);
-        io.flush();
         try {
-            return Optional.ofNullable(io.readLine());
+            return Optional.ofNullable(io.readLine(prompt));
         } catch (IOException e) {
             io.println("Virhe syötteen luvussa!");
             return Optional.empty();
@@ -88,6 +94,14 @@ public class CommandInterpreter {
                 Command cmdObj = COMMANDS.get(args.get(0));
                 if (cmdObj != null) {
                     cmdObj.getHandler().accept(this, args.toArray(new String[0]));
+                    if (saveFile.isPresent()) {
+                        try {
+                            FileSave.saveStorage(saveFile.get(), storage);
+                        } catch (IOException e) {
+                            io.println("Virhe tallennettaessa tiedostoon \"" + saveFile.get() + "\"!");
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     io.println("Tuntematon komento! Syötä \"ohje\" saadaksesi lisätietoja.");
                 }

@@ -3,6 +3,7 @@ package lukuvinkit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -12,6 +13,10 @@ public class ReadingTip {
 
     public ReadingTip() {
         this.fields = new HashMap<>();
+    }
+
+    public Set<ReadingTipField<?>> getPresentFields() {
+        return fields.keySet();
     }
 
     public<T> String getFieldValueString(ReadingTipField<T> field) {
@@ -31,10 +36,11 @@ public class ReadingTip {
         fields.put(field, value);
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         for (Map.Entry<ReadingTipField<? extends Object>, Object> entry : fields.entrySet()) {
+            @SuppressWarnings("rawtypes")
             ReadingTipField key = entry.getKey();
             Object value = entry.getValue();
             obj.put(key.getName(), key.getType().fieldToString(value));
@@ -42,10 +48,10 @@ public class ReadingTip {
         return obj;
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("unchecked")
     public static ReadingTip fromJSONObject(JSONObject obj) {
         ReadingTip tip = new ReadingTip();
-        for (ReadingTipField field : ReadingTipField.VALUES) {
+        for (@SuppressWarnings("rawtypes") ReadingTipField field : ReadingTipField.VALUES) {
             if (obj.has(field.getName())) {
                 tip.setFieldValue(field, field.getType().stringToField(obj.getString(field.getName())));
             }
@@ -59,5 +65,10 @@ public class ReadingTip {
         if (!(o instanceof ReadingTip)) return false;
         ReadingTip that = (ReadingTip) o;
         return Objects.equals(fields, that.fields);
+    }
+
+    @Override
+    public int hashCode() {
+        return fields.hashCode();
     }
 }
