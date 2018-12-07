@@ -1,15 +1,17 @@
 package lukuvinkit.fields;
 
-public class ValidatedStringFieldType implements FieldType<String> {
-    private final String regex;
+import java.util.function.Predicate;
 
-    public ValidatedStringFieldType(String regex) {
-        this.regex = regex;
+public class ValidatedStringFieldType implements FieldType<String> {
+    private final Predicate<String> predicate;
+
+    public ValidatedStringFieldType(Predicate<String> predicate) {
+        this.predicate = predicate;
     }
 
     @Override
     public boolean validateString(String strRep) {
-        return strRep.matches(regex);
+        return predicate.test(strRep);
     }
 
     @Override

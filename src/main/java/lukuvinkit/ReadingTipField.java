@@ -17,7 +17,7 @@ public class ReadingTipField<T> implements Translated {
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
     public static final ReadingTipField<String> TITLE =
-        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(".*\\S.*"), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
+        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(s -> s.matches(".*\\S.*")), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
     public static final ReadingTipField<TipType> TYPE =
         new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), true, Collections.emptyList(), TipType.OTHER);
     public static final ReadingTipField<String> AUTHORS =
