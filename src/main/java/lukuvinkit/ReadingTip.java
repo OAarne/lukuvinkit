@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
-public class ReadingTip {
+public class ReadingTip implements ReadingTipInterface {
 
     private Map<ReadingTipField<? extends Object>, Object> fields;
 
@@ -15,14 +15,17 @@ public class ReadingTip {
         this.fields = new HashMap<>();
     }
 
+    @Override
     public Set<ReadingTipField<?>> getPresentFields() {
         return fields.keySet();
     }
 
+    @Override
     public<T> String getFieldValueString(ReadingTipField<T> field) {
         return field.getType().fieldToString(getFieldValue(field));
     }
 
+    @Override
     public void setFieldValueString(ReadingTipField<?> field, String value) {
         fields.put(field, field.getType().stringToField(value));
     }

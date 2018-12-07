@@ -12,14 +12,14 @@ public class BooleanFieldType implements FieldType<Boolean> {
 
     @Override
     public boolean validateString(String strRep) {
-        return strRep.equals(trueString) || strRep.equals(falseString);
+        return trueString.contains(strRep) || falseString.contains(trueString);
     }
 
     @Override
     public Boolean stringToField(String strRep) {
-        if (strRep.equals(trueString)) {
+        if (trueString.contains(strRep) && !strRep.equals(falseString)) {
             return Boolean.TRUE;
-        } else if (strRep.equals(falseString)) {
+        } else if (falseString.contains(strRep)) {
             return Boolean.FALSE;
         } else {
             assert false;
