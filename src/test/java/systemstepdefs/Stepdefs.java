@@ -1,6 +1,5 @@
 package systemstepdefs;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.fi.Kun;
 import cucumber.api.java.fi.Niin;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 import cucumber.api.java.fi.Oletetaan;
 import lukuvinkit.ui.CommandInterpreter;
 import lukuvinkit.Storage;
-import lukuvinkit.StubIO;
+import lukuvinkit.ui.StubIO;
 import lukuvinkit.TipType;
 import static org.junit.Assert.*;
 

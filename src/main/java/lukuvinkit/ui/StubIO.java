@@ -1,4 +1,4 @@
-package lukuvinkit;
+package lukuvinkit.ui;
 
 import lukuvinkit.ui.IO;
 import java.util.ArrayList;
