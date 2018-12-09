@@ -1,14 +1,11 @@
 package lukuvinkit.ui;
 
+import lukuvinkit.*;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
-import lukuvinkit.ReadingTip;
-import lukuvinkit.ReadingTipField;
-import lukuvinkit.ReadingTipInterface;
-import lukuvinkit.StringReadingTip;
-import lukuvinkit.TipType;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
@@ -166,12 +163,11 @@ public enum Command {
         printTipList(interpreter, results);
     }
 
-    private static<T extends ReadingTipInterface> Optional<T> readReadingTip(
+    private static <T extends ReadingTipInterface> Optional<T> readReadingTip(
         CommandInterpreter interpreter,
         String[] argsArray,
         Optional<TipType> tipType,
-        Supplier<T> newReadingTip)
-    {
+        Supplier<T> newReadingTip) {
 
         List<String> args = new ArrayList<>(Arrays.asList(argsArray));
         args.remove(0); // poistetaan komennon nimi
@@ -183,11 +179,7 @@ public enum Command {
                 tipType = Optional.of(type);
             } else {
                 interpreter.getIO().println(
-                    "Argumentti `"
-                    + typeName
-                    + "' ei ole kelvollinen vinkkityyppi (joita ovat: "
-                    + Arrays.asList(TipType.values()).stream().map(TipType::getName).collect(joining(", "))
-                    + ").");
+                    "Argumentti `" + typeName + "' ei ole kelvollinen vinkkityyppi (joita ovat: " + Arrays.asList(TipType.values()).stream().map(TipType::getName).collect(joining(", ")) + ").");
                 return Optional.empty();
             }
         }
@@ -197,7 +189,7 @@ public enum Command {
                 .filter(field -> field.getAssociatedTipTypes().contains(t))
                 .toArray(ReadingTipField[]::new)
         ).orElse(ReadingTipField.VALUES.toArray(new ReadingTipField<?>[0]));
-        
+
         T tip = newReadingTip.get();
         tipType.ifPresent(t -> tip.setFieldValueString(ReadingTipField.TYPE, t.getFinnishTranslation()));
 
@@ -210,7 +202,7 @@ public enum Command {
                     return Optional.empty();
                 }
                 String fieldName = arg.substring(0, sepIndex);
-                String fieldValue = arg.substring(sepIndex+1);
+                String fieldValue = arg.substring(sepIndex + 1);
                 ReadingTipField<?> field = ReadingTipField.VALUE_MAP.get(fieldName);
                 if (field == null) {
                     interpreter.getIO().println("Kenttää `" + fieldName + "' ei ole olemassa.");
@@ -284,9 +276,9 @@ public enum Command {
             outputMatrix[x][0] = field.getName();
             columnMaxWidth[x] = field.getName().length();
             for (int y = 1; y <= tips.size(); y++) {
-                String value = tips.get(y-1).getValue().getFieldValueString(field);
+                String value = tips.get(y - 1).getValue().getFieldValueString(field);
                 if (value.length() > maxWidth) {
-                    value = value.substring(0, maxWidth-3) + "...";
+                    value = value.substring(0, maxWidth - 3) + "...";
                 }
                 outputMatrix[x][y] = value;
                 if (value.length() > columnMaxWidth[x]) columnMaxWidth[x] = value.length();
@@ -294,7 +286,7 @@ public enum Command {
         }
         IntStream
             .rangeClosed(1, tips.size())
-            .forEachOrdered(y -> outputMatrix[0][y] = tips.get(y-1).getKey().toString());
+            .forEachOrdered(y -> outputMatrix[0][y] = tips.get(y - 1).getKey().toString());
 
         IO io = interpreter.getIO();
         io.println();
