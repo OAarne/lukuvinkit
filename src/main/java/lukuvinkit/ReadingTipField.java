@@ -46,6 +46,40 @@ public class ReadingTipField<T> implements Translated {
         VALUE_MAP.put(name, this);
     }
 
+    public static boolean validateIsbnImplementation(String isbn) {
+        if (isbn.isEmpty()) return true;
+
+        isbn = isbn.replaceAll("[xX]", "A");
+        isbn = isbn.chars().filter(c -> Character.isDigit(c) || c == 'A')
+            .mapToObj(c -> Character.toString((char) c))
+            .collect(Collectors.joining());
+
+        int length;
+        int[] checkVector;
+
+        if (isbn.length() == 13) {
+            length = 13;
+            checkVector = new int[]{1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1};
+        } else if (isbn.length() == 10) {
+            length = 10;
+            checkVector = new int[]{10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+        } else {
+            return false;
+        }
+
+        int[] digits = new int[length];
+        for (int i = 0; i < length; i++) {
+            digits[i] = Character.digit(isbn.charAt(i), 11);
+        }
+
+        int sum = IntStream.range(0, length)
+            .parallel()
+            .map(id -> checkVector[id] * digits[id])
+            .reduce(0, Integer::sum);
+
+        return (length == 13) ? (sum % 10 == 0) : (sum % 11 == 0);
+    }
+
     public String getName() {
         return name;
     }
@@ -65,44 +99,5 @@ public class ReadingTipField<T> implements Translated {
 
     public T getDefaultValue() {
         return defaultValue;
-    }
-
-    public static boolean validateIsbnImplementation(String isbn) {
-        if (isbn.isEmpty()) return true;
-
-        isbn = isbn.replaceAll("[xX]", "A");
-        isbn = isbn.chars().filter(c -> Character.isDigit(c) || c == 'A')
-            .mapToObj(c -> Character.toString((char) c))
-            .collect(Collectors.joining());
-
-        if (isbn.length() == 13) {
-            int[] checkVector = {1,3,1,3,1,3,1,3,1,3,1,3,1};
-            int[] digits = new int[13];
-            for (int i = 0; i < 13; i++) {
-                digits[i] = Character.digit(isbn.charAt(i), 10);
-            }
-
-            int sum = IntStream.range(0,13)
-                .parallel()
-                .map(id -> checkVector[id] * digits[id])
-                .reduce(0, Integer::sum);
-
-            return (sum % 10 == 0);
-        } else if (isbn.length() == 10) {
-            int[] checkVector = {10,9,8,7,6,5,4,3,2,1};
-            int[] digits = new int[10];
-            for (int i = 0; i < 10; i++) {
-                digits[i] = Character.digit(isbn.charAt(i), 11);
-            }
-
-            int sum = IntStream.range(0,10)
-                .parallel()
-                .map(id -> checkVector[id] * digits[id])
-                .reduce(0, Integer::sum);
-
-            return (sum % 11 == 0);
-        } else {
-            return false;
-        }
     }
 }
