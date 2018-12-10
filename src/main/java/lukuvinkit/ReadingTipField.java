@@ -6,6 +6,8 @@ import lukuvinkit.fields.FieldType;
 import lukuvinkit.fields.ValidatedStringFieldType;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static lukuvinkit.TipType.BOOK;
 import static lukuvinkit.TipType.OTHER;
@@ -17,7 +19,7 @@ public class ReadingTipField<T> implements Translated {
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
     public static final ReadingTipField<String> TITLE =
-        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(".*\\S.*"), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
+        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(s -> s.matches(".*\\S.*")), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
     public static final ReadingTipField<TipType> TYPE =
         new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), true, Collections.emptyList(), TipType.OTHER);
     public static final ReadingTipField<String> AUTHORS =
@@ -25,7 +27,7 @@ public class ReadingTipField<T> implements Translated {
     public static final ReadingTipField<String> DESCRIPTION =
         new ReadingTipField<>("Kuvaus", STRING_TYPE, true, Arrays.asList(TipType.values()), "");
     public static final ReadingTipField<String> ISBN =
-        new ReadingTipField<>("ISBN", STRING_TYPE, false, Arrays.asList(BOOK, OTHER), "");
+        new ReadingTipField<>("ISBN", new ValidatedStringFieldType(ReadingTipField::validateIsbnImplementation), false, Arrays.asList(BOOK, OTHER), "");
     public static final ReadingTipField<Boolean> IS_READ =
         new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), true, Collections.emptyList(), false);
 
@@ -42,6 +44,40 @@ public class ReadingTipField<T> implements Translated {
         VALUES.add(this);
         if (visibleDuringListing) VISIBLE_VALUES.add(this);
         VALUE_MAP.put(name, this);
+    }
+
+    public static boolean validateIsbnImplementation(String isbn) {
+        if (isbn.isEmpty()) return true;
+
+        isbn = isbn.replaceAll("[xX]", "A");
+        isbn = isbn.chars().filter(c -> Character.isDigit(c) || c == 'A')
+            .mapToObj(c -> Character.toString((char) c))
+            .collect(Collectors.joining());
+
+        int length;
+        int[] checkVector;
+
+        if (isbn.length() == 13) {
+            length = 13;
+            checkVector = new int[]{1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1};
+        } else if (isbn.length() == 10) {
+            length = 10;
+            checkVector = new int[]{10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+        } else {
+            return false;
+        }
+
+        int[] digits = new int[length];
+        for (int i = 0; i < length; i++) {
+            digits[i] = Character.digit(isbn.charAt(i), 11);
+        }
+
+        int sum = IntStream.range(0, length)
+            .parallel()
+            .map(id -> checkVector[id] * digits[id])
+            .reduce(0, Integer::sum);
+
+        return (length == 13) ? (sum % 10 == 0) : (sum % 11 == 0);
     }
 
     public String getName() {

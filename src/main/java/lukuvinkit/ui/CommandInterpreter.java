@@ -1,13 +1,10 @@
 package lukuvinkit.ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lukuvinkit.FileSave;
 import lukuvinkit.Storage;
+
+import java.io.IOException;
+import java.util.*;
 
 public class CommandInterpreter {
 
@@ -71,6 +68,8 @@ public class CommandInterpreter {
         io.println("Lukuvinkit-ohjelma. Kirjoita \"ohje\" saadaksesi listauksen komennoista.");
         while (true) {
             String command = prompt("> ", "lopeta");
+            if (command.contentEquals("")) continue;
+
             if (command.equals("lopeta") || command.equals("poistu")) {
                 break;
             } else {
