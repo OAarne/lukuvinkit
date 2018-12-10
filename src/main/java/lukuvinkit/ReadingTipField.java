@@ -100,4 +100,8 @@ public class ReadingTipField<T> implements Translated {
     public T getDefaultValue() {
         return defaultValue;
     }
+
+    public String getDefaultValueString() {
+        return type.fieldToString(defaultValue);
+    }
 }
