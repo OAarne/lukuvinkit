@@ -6,6 +6,10 @@ import java.util.Map;
 public enum TipType implements Translated {
     BOOK("kirja"),
     ARTICLE("artikkeli"),
+    BLOG("blogi"),
+    PODCAST("podcast"),
+    VIDEO("video"),
+    MOVIE("elokuva"),
     OTHER("muu");
 
     private String name;

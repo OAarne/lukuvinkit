@@ -5,12 +5,13 @@ import lukuvinkit.fields.EnumFieldType;
 import lukuvinkit.fields.FieldType;
 import lukuvinkit.fields.ValidatedStringFieldType;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static lukuvinkit.TipType.BOOK;
-import static lukuvinkit.TipType.OTHER;
+import static lukuvinkit.TipType.*;
 import static lukuvinkit.fields.StringFieldType.STRING_TYPE;
 
 public class ReadingTipField<T> implements Translated {
@@ -18,18 +19,62 @@ public class ReadingTipField<T> implements Translated {
     public static final List<ReadingTipField<? extends Object>> VISIBLE_VALUES = new ArrayList<>();
     public static final Map<String, ReadingTipField<? extends Object>> VALUE_MAP = new HashMap<>();
 
-    public static final ReadingTipField<String> TITLE =
-        new ReadingTipField<>("Otsikko", new ValidatedStringFieldType(s -> s.matches(".*\\S.*")), true, Arrays.asList(TipType.values()), "Nimetön vinkki");
-    public static final ReadingTipField<TipType> TYPE =
-        new ReadingTipField<>("Tyyppi", new EnumFieldType<>(TipType.values()), true, Collections.emptyList(), TipType.OTHER);
-    public static final ReadingTipField<String> AUTHORS =
-        new ReadingTipField<>("Kirjoittajat", STRING_TYPE, true, Arrays.asList(TipType.values()), "");
-    public static final ReadingTipField<String> DESCRIPTION =
-        new ReadingTipField<>("Kuvaus", STRING_TYPE, true, Arrays.asList(TipType.values()), "");
-    public static final ReadingTipField<String> ISBN =
-        new ReadingTipField<>("ISBN", new ValidatedStringFieldType(ReadingTipField::validateIsbnImplementation), false, Arrays.asList(BOOK, OTHER), "");
-    public static final ReadingTipField<Boolean> IS_READ =
-        new ReadingTipField<>("Luettu", new BooleanFieldType("luettu", "lukematta"), true, Collections.emptyList(), false);
+    public static final ReadingTipField<String> TITLE = new ReadingTipField<>(
+        "Otsikko",
+        new ValidatedStringFieldType(s -> s.matches(".*\\S.*")),
+        true,
+        Arrays.asList(TipType.values()),
+        "Nimetön vinkki"
+    );
+    public static final ReadingTipField<TipType> TYPE = new ReadingTipField<>(
+        "Tyyppi",
+        new EnumFieldType<>(TipType.values()),
+        true,
+        Collections.emptyList(),
+        TipType.OTHER
+    );
+    public static final ReadingTipField<String> AUTHORS = new ReadingTipField<>(
+        "Kirjoittajat",
+        STRING_TYPE,
+        true,
+        Arrays.asList(TipType.values()),
+        ""
+    );
+    public static final ReadingTipField<String> RELEASE_DATE = new ReadingTipField<>(
+        "Julkaisuajankohta",
+        STRING_TYPE,
+        false,
+        Arrays.asList(TipType.values()),
+        ""
+    );
+    public static final ReadingTipField<String> DESCRIPTION = new ReadingTipField<>(
+        "Kuvaus",
+        STRING_TYPE,
+        true,
+        Arrays.asList(TipType.values()),
+        ""
+    );
+    public static final ReadingTipField<String> ISBN = new ReadingTipField<>(
+        "ISBN",
+        new ValidatedStringFieldType(ReadingTipField::validateIsbnImplementation),
+        false,
+        Arrays.asList(BOOK, OTHER),
+        ""
+    );
+    public static final ReadingTipField<String> URL = new ReadingTipField<>(
+        "URL",
+        new ValidatedStringFieldType(ReadingTipField::validateUrlImplementation),
+        false,
+        Arrays.asList(ARTICLE, BLOG, PODCAST, VIDEO, OTHER),
+        ""
+    );
+    public static final ReadingTipField<Boolean> IS_READ = new ReadingTipField<>(
+        "Luettu",
+        new BooleanFieldType("luettu", "lukematta"),
+        true,
+        Collections.emptyList(),
+        false
+    );
 
     private String name;
     private List<TipType> associatedTipTypes;
@@ -80,6 +125,15 @@ public class ReadingTipField<T> implements Translated {
         return (length == 13) ? (sum % 10 == 0) : (sum % 11 == 0);
     }
 
+    public static boolean validateUrlImplementation(String url) {
+        try {
+            if (!url.isEmpty()) new URL(url);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -99,5 +153,9 @@ public class ReadingTipField<T> implements Translated {
 
     public T getDefaultValue() {
         return defaultValue;
+    }
+
+    public String getDefaultValueString() {
+        return type.fieldToString(defaultValue);
     }
 }

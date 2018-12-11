@@ -14,9 +14,6 @@ public enum Command {
 
     HELP("ohje", "Ohjekomennot", "tulostaa ohjeen", Command::printHelpImplementation),
     CREATE("luo", "Luomiskomennot", "lisää uuden lukuvinkin", Command::addReadingTipImplementation),
-    CREATE_OTHER("vinkki", "Luomiskomennot", "lisää uuden muu-tyyppisen lukuvinkin", Command::addOtherImplementation),
-    CREATE_BOOK("kirja", "Luomiskomennot", "lisää uuden kirja-tyyppisen lukuvinkin", Command::addBookImplementation),
-    CREATE_ARTICLE("artikkeli", "Luomiskomennot", "lisää uuden artikkeli-tyyppisen lukuvinkin", Command::addArticleImplementation),
     MARK_READ("luettu", "Muokkauskomennot", "merkitsee lukuvinkin luetuksi", Command::markReadImplementation),
     REMOVE("poista", "Muokkauskomennot", "poistaa lukuvinkin", Command::removeReadingTipImplementation),
     LIST("listaa", "Näyttämiskomennot", "listaa olemassaolevat lukuvinkit", Command::listReadingTipsImplementation),
