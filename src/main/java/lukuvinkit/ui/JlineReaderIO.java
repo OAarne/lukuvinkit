@@ -27,12 +27,12 @@ public class JlineReaderIO implements IO {
     private static List<Candidate> tipFields = ReadingTipField.VALUES
         .stream()
         .map(t -> new Candidate(
-            t.getName() + "=",
-            t.getName(),
-            "Kentät",
-            "oletus on \"" + t.getDefaultValueString() + "\"",
-            null, null, false
-        ))
+        t.getName() + "=",
+        t.getName(),
+        "Kentät",
+        "oletus on \"" + t.getDefaultValueString() + "\"",
+        null, null, false
+    ))
         .collect(toList());
 
     private Terminal terminal;
