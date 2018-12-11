@@ -127,7 +127,7 @@ public class ReadingTipField<T> implements Translated {
 
     public static boolean validateUrlImplementation(String url) {
         try {
-            new URL(url);
+            if (!url.isEmpty()) new URL(url);
             return true;
         } catch (MalformedURLException e) {
             return false;
