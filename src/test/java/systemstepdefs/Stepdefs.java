@@ -33,18 +33,18 @@ public class Stepdefs {
 
     @Kun("käyttäjä on lisännyt vinkin ja poistanut sen annetun tunnisteen avulla")
     public void käyttäjäOnLisääVinkinJaPoistaaSenAnnetunTunnisteenAvulla() {
-        inputLines.add("lisää Kirja takakansiteksti 1234");
+        inputLines.add("luo Otsikko=\"Kirja\" Kuvaus=\"takakansiteksti\"");
         inputLines.add("poista 0");
     }
 
     @Kun("Vinkki otsikolla {string} ja kuvauksella {string} on lisätty")
     public void vinkkiOtsikollaJaKuvauksellaOnLisätty(String otsikko, String kuvaus) {
-        inputLines.add("vinkki Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+        inputLines.add("luo Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Kun("käyttäjä on lisännyt kirjan otsikolla {string} ja kuvauksella {string}")
     public void käyttäjäOnLisännytKirjanOtsikollaJaKuvauksella(String otsikko, String kuvaus) {
-        inputLines.add("kirja Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+        inputLines.add("luo kirja Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Kun("Ohjelma on käynnistetty uudelleen")
@@ -74,7 +74,7 @@ public class Stepdefs {
 
     @Kun("käyttäjä on lisännyt artikkelin otsikolla {string} ja kuvauksella {string}")
     public void käyttäjäOnLisännytArtikkelinOtsikollaJaKuvauksella(String otsikko, String kuvaus) {
-        inputLines.add("artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
+        inputLines.add("luo artikkeli Otsikko=\"" + otsikko + "\" Kuvaus=\"" + kuvaus + "\"");
     }
 
     @Kun("käyttäjä on hakenut kaikki vinkit otsikolla {string}")
