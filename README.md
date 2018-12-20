@@ -5,6 +5,8 @@
 
 lukuvinkit tutuksi
 
+[Loppuraportti](https://github.com/OAarne/lukuvinkit/blob/master/dokumentaatio/loppuraportti.md)
+
 ## Valmiin määritelmä
 1. Käyttötapauskertomuksen toteuttava koodi masterissa
 2. Yksikkötestit on kirjoitettu ja menevät läpi
