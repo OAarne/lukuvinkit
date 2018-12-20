@@ -38,4 +38,4 @@ Opimme siitä, miten projektin edistys kannattaa esittää asiakkaalle - myös s
 Kuten “Mikä oli huonoa”-osiosta havaitsee, havaitsimme monta seikkaa joita voimme parantaa tulevaisuudessa, mistä emme ehkä ilman tätä kokemusta olisi tietoisia. Näin ollen jokaisen yllä olevan negatiivisen huomion voi katsoa myös merkittäväksi oppimiskokemukseksi.
 
 ## Mitä olisimme halunneet oppia
-Miten tärkeäksi työskentelyn prosessi muodostuu silloin, kun projekti on normaalikokoinen, eli kaikille riittää työtä.
+Miten tärkeäksi työskentelyn prosessi muodostuu silloin, kun projekti on suurempikokoinen ja mielekkäämmin rinnakkaistettavissa tälle määrälle tekijöitä.
